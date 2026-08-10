@@ -1,0 +1,2101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Periodic Table of Education Agents</title>
+  <link rel="icon" href="data:,">
+  <script>
+    (() => {
+      const param = new URLSearchParams(window.location.search).get("scoutTheme");
+      const theme =
+        param || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+  <style>
+    :root {
+      color-scheme: light;
+      --cp-bg: #f7f4ef;
+      --cp-bg-elevated: #fcfbf8;
+      --cp-surface: #ffffff;
+      --cp-surface-soft: #f5f5f5;
+      --cp-border: #dedede;
+      --cp-border-strong: #919191;
+      --cp-text: #242424;
+      --cp-text-muted: #5c5c5c;
+      --cp-text-soft: #6f6f6f;
+      --cp-accent: #b11f4b;
+      --cp-accent-hover: #9a1a41;
+      --cp-accent-soft: rgba(177, 31, 75, 0.08);
+      --cp-accent-fg: #ffffff;
+      --cp-success: #16a34a;
+      --cp-danger: #dc2626;
+      --cp-warning: #f59e0b;
+      --cp-link: #0078d4;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.12);
+      --cp-overlay: rgba(255, 255, 255, 0.8);
+      --cp-panel: rgba(255, 255, 255, 0.86);
+      --cp-panel-strong: rgba(255, 255, 255, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.55);
+      --cp-highlight: rgba(177, 31, 75, 0.12);
+    }
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --cp-bg: #3d3b3a;
+      --cp-bg-elevated: #343231;
+      --cp-surface: #292929;
+      --cp-surface-soft: #2e2e2e;
+      --cp-border: #474747;
+      --cp-border-strong: #5f5f5f;
+      --cp-text: #dedede;
+      --cp-text-muted: #919191;
+      --cp-text-soft: #b0b0b0;
+      --cp-accent: #fd8ea1;
+      --cp-accent-hover: #fb7b91;
+      --cp-accent-soft: rgba(253, 142, 161, 0.14);
+      --cp-accent-fg: #1a1a1a;
+      --cp-success: #4ade80;
+      --cp-danger: #f87171;
+      --cp-warning: #fbbf24;
+      --cp-link: #4da6ff;
+      --cp-shadow: 0 18px 48px rgba(0, 0, 0, 0.32);
+      --cp-overlay: rgba(41, 41, 41, 0.88);
+      --cp-panel: rgba(41, 41, 41, 0.72);
+      --cp-panel-strong: rgba(41, 41, 41, 0.96);
+      --cp-sheen: rgba(255, 255, 255, 0.04);
+      --cp-highlight: rgba(253, 142, 161, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--cp-bg);
+      color: var(--cp-text);
+      font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    a { color: var(--cp-link); }
+
+    .page {
+      max-width: 1780px;
+      margin: 0 auto;
+      padding: 28px;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 390px;
+      gap: 18px;
+      align-items: stretch;
+      margin-bottom: 18px;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(2.3rem, 4.5vw, 5.4rem);
+      line-height: 0.92;
+      letter-spacing: -0.07em;
+    }
+    .subtitle {
+      max-width: 1020px;
+      color: var(--cp-text-muted);
+      font-size: 1.05rem;
+      line-height: 1.45;
+      margin: 12px 0 0;
+    }
+    .panel, .element, .group-label, .period-label, dialog {
+      box-shadow: 0 0 2px var(--cp-border), 0 1px 2px var(--cp-border);
+    }
+    .panel {
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+      background: var(--cp-surface);
+      padding: 15px;
+    }
+    .panel h2, .panel h3 { margin: 0 0 8px; font-size: 1rem; }
+    .panel p { margin: 0; color: var(--cp-text-muted); line-height: 1.42; font-size: 0.92rem; }
+
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .stripe { height: 7px; border-radius: 999px; margin-bottom: 10px; background: var(--cp-accent); }
+    .stripe.a1 { background: var(--cp-success); }
+    .stripe.paid { background: var(--cp-warning); }
+    .stripe.studio { background: var(--cp-accent); }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 16px 0;
+    }
+    .search {
+      flex: 1 1 360px;
+      min-width: 260px;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-surface);
+      color: var(--cp-text);
+      font: inherit;
+      padding: 11px 12px;
+    }
+    .pill {
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-surface);
+      color: var(--cp-text);
+      padding: 10px 12px;
+      font: inherit;
+      cursor: pointer;
+    }
+    .pill[aria-pressed="true"], .pill:hover {
+      border-color: var(--cp-accent);
+      background: var(--cp-accent-soft);
+    }
+
+    .table-scroll { overflow-x: auto; padding-bottom: 12px; }
+    .ptable {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 44px repeat(18, minmax(0, 1fr));
+      grid-auto-rows: 92px;
+      grid-template-rows: 28px repeat(7, 92px);
+      gap: 4px;
+    }
+    @media (min-width: 1720px) {
+      .ptable { grid-template-columns: 56px repeat(18, minmax(0, 1fr)); grid-auto-rows: 108px; grid-template-rows: 32px repeat(7, 108px); gap: 6px; }
+    }
+    .group-label, .period-label {
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-bg-elevated);
+      color: var(--cp-text-muted);
+      font-size: 0.72rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4px;
+    }
+    .period-label {
+      font-family: Consolas, "Courier New", Courier, monospace;
+      font-weight: 700;
+      color: var(--cp-accent);
+      background: var(--cp-surface);
+    }
+    .element {
+      position: relative;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-surface);
+      color: var(--cp-text);
+      padding: 6px;
+      cursor: pointer;
+      text-align: left;
+      font: inherit;
+      overflow: hidden;
+      transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+    }
+    .element:hover, .element:focus-visible {
+      transform: translateY(-2px);
+      border-color: var(--cp-accent);
+      background: var(--cp-accent-soft);
+      outline: none;
+    }
+    .element.hidden { display: none; }
+    .element.highlight {
+      animation: cp-highlight 1.6s ease-out 1;
+      z-index: 2;
+    }
+    @keyframes cp-highlight {
+      0%   { box-shadow: 0 0 0 0 var(--cp-accent), 0 0 0 rgba(0,0,0,0); transform: scale(1); }
+      30%  { box-shadow: 0 0 0 6px var(--cp-accent-soft), 0 8px 20px rgba(0,0,0,0.14); transform: scale(1.08); }
+      100% { box-shadow: 0 0 0 0 rgba(0,0,0,0); transform: scale(1); }
+    }
+    .element.a1 { border-top: 6px solid var(--cp-success); }
+    .element.freechat { border-top: 6px solid var(--cp-success); }
+    .element.paid { border-top: 6px solid var(--cp-warning); }
+    .element.freem365 { border-top: 6px solid var(--cp-warning); }
+    .element.studio { border-top: 6px solid var(--cp-accent); }
+    .element.moehe { border-top: 6px solid var(--cp-accent); }
+
+    .atomic {
+      display: flex;
+      justify-content: space-between;
+      color: var(--cp-text-muted);
+      font-family: Consolas, "Courier New", Courier, monospace;
+      font-size: 0.66rem;
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+    .symbol {
+      font-size: 0.95rem;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -0.06em;
+    }
+    .symbol-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 3px;
+      margin-bottom: 2px;
+    }
+    .symbol-row .symbol {
+      font-size: 0.85rem;
+    }
+    .element {
+      padding: 4px;
+    }
+    .atomic { font-size: 0.58rem; margin-bottom: 2px; }
+    .name { font-size: 0.6rem; line-height: 1.1; margin-top: 2px; }
+    @media (min-width: 1720px) {
+      .symbol { font-size: 1.6rem; }
+      .symbol-row .symbol { font-size: 1.1rem; }
+      .element { padding: 6px; }
+      .atomic { font-size: 0.66rem; margin-bottom: 3px; }
+      .name { font-size: 0.72rem; }
+    }
+    .tile-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      color: var(--cp-text-muted);
+      flex: 0 0 auto;
+    }
+    .product-icon {
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+    .product-icon svg {
+      width: 34px;
+      height: 34px;
+      display: block;
+      filter: drop-shadow(0 2px 3px rgba(0,0,0,0.14));
+    }
+    .modal-icon .product-icon,
+    .card-icon .product-icon {
+      width: 48px;
+      height: 48px;
+    }
+    .modal-icon .product-icon svg,
+    .card-icon .product-icon svg {
+      width: 48px;
+      height: 48px;
+    }
+    @media (min-width: 1720px) {
+      .product-icon, .product-icon svg { width: 40px; height: 40px; }
+    }
+    .app-badge,
+    .agent-glyph {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.375rem;
+      background: var(--cp-surface-soft);
+      color: var(--cp-accent);
+      font-family: "Segoe UI", Aptos, Calibri, -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+    .agent-glyph {
+      border-radius: 999px;
+      font-size: 0.74rem;
+    }
+    .name {
+      font-size: 0.6rem;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-top: 2px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      hyphens: auto;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    @media (min-width: 1720px) {
+      .name { font-size: 0.72rem; line-height: 1.15; margin-top: 4px; }
+    }
+    .element .mass { display: none; }
+    .big .mass, .modal .mass {
+      display: block;
+      position: static;
+      font-size: 0.75rem;
+      color: var(--cp-text-soft);
+      margin-top: 4px;
+    }
+    .mass {
+      position: absolute;
+      left: 6px;
+      right: 6px;
+      bottom: 5px;
+      font-size: 0.56rem;
+      color: var(--cp-text-soft);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .key {
+      grid-column: 5 / span 10;
+      grid-row: 2 / span 2;
+      border: 1px dashed var(--cp-border-strong);
+      border-radius: 16px;
+      background: var(--cp-panel);
+      padding: 18px;
+      display: grid;
+      grid-template-columns: 132px 1fr;
+      gap: 16px;
+      align-items: center;
+    }
+    .sample {
+      border: 1px solid var(--cp-border);
+      border-top: 6px solid var(--cp-accent);
+      border-radius: 0.625rem;
+      background: var(--cp-surface);
+      min-height: 120px;
+      padding: 10px;
+    }
+    .key h2 { margin: 0 0 8px; font-size: 1.35rem; }
+    .key p { margin: 0; color: var(--cp-text-muted); line-height: 1.45; }
+
+    .moehe-section {
+      margin-top: 18px;
+    }
+    .persona-card { display: flex; flex-direction: column; }
+    .persona-summary {
+      color: var(--cp-text-muted);
+      line-height: 1.4;
+      margin: 0 0 10px;
+      font-size: 0.9rem;
+    }
+    .persona-agents {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .persona-agent {
+      display: flex;
+      flex-direction: column;
+      padding: 8px 10px;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.5rem;
+      background: var(--cp-surface-soft);
+      color: var(--cp-text);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+      transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+    }
+    .persona-agent:hover, .persona-agent:focus-visible {
+      transform: translateY(-1px);
+      border-color: var(--cp-accent);
+      background: var(--cp-accent-soft);
+      outline: none;
+    }
+    .persona-agent[disabled] {
+      cursor: not-allowed;
+      opacity: 0.55;
+      transform: none;
+    }
+    .persona-agent strong {
+      color: var(--cp-text);
+      font-size: 0.86rem;
+      line-height: 1.2;
+    }
+    .persona-agent span {
+      color: var(--cp-text-muted);
+      font-size: 0.78rem;
+      line-height: 1.35;
+      margin-top: 2px;
+    }
+    .value-section {
+      margin-top: 18px;
+    }
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .metric-card {
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+      background: var(--cp-surface);
+      padding: 14px;
+      box-shadow: 0 0 2px var(--cp-border), 0 1px 2px var(--cp-border);
+    }
+    .metric {
+      font-size: 1.55rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--cp-accent);
+      margin-bottom: 4px;
+    }
+    .metric-card strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+    .metric-card p {
+      margin: 0;
+      color: var(--cp-text-muted);
+      line-height: 1.4;
+      font-size: 0.9rem;
+    }
+    .role-map {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .role-map article {
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-surface-soft);
+      padding: 12px;
+    }
+    .role-map h3 {
+      margin: 0 0 6px;
+      font-size: 0.95rem;
+    }
+    .role-map p {
+      margin: 0;
+      color: var(--cp-text-muted);
+      line-height: 1.4;
+      font-size: 0.86rem;
+    }
+    .moehe-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .moehe-card {
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+      background: var(--cp-surface);
+      padding: 14px;
+      box-shadow: 0 0 2px var(--cp-border), 0 1px 2px var(--cp-border);
+    }
+    .moehe-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .moehe-title .card-icon {
+      font-size: 1.25rem;
+      color: var(--cp-accent);
+      flex: 0 0 auto;
+    }
+    .moehe-title h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+    .moehe-card h3 { margin: 0 0 8px; font-size: 1rem; }
+    .moehe-card p { margin: 0 0 8px; color: var(--cp-text-muted); line-height: 1.4; font-size: 0.9rem; }
+    .formula {
+      font-family: Consolas, "Courier New", Courier, monospace;
+      color: var(--cp-accent);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .empty {
+      display: none;
+      margin: 12px 0;
+      padding: 14px;
+      border: 1px dashed var(--cp-border-strong);
+      border-radius: 16px;
+      background: var(--cp-surface);
+      color: var(--cp-text-muted);
+    }
+
+    dialog {
+      width: min(900px, calc(100vw - 32px));
+      border: 1px solid var(--cp-border);
+      border-radius: 16px;
+      background: var(--cp-panel-strong);
+      color: var(--cp-text);
+      padding: 0;
+    }
+    dialog::backdrop { background: var(--cp-overlay); }
+    .modal { padding: 22px; }
+    .modal-head {
+      display: grid;
+      grid-template-columns: 118px 1fr auto;
+      gap: 16px;
+      align-items: start;
+    }
+    .big {
+      border: 1px solid var(--cp-border);
+      border-top: 6px solid var(--cp-accent);
+      border-radius: 0.625rem;
+      background: var(--cp-surface);
+      min-height: 116px;
+      padding: 10px;
+    }
+    .modal-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-accent-soft);
+      color: var(--cp-accent);
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+    }
+    .big.a1, .big.freechat { border-top-color: var(--cp-success); }
+    .big.paid, .big.freem365 { border-top-color: var(--cp-warning); }
+    .big.studio, .big.moehe { border-top-color: var(--cp-accent); }
+    .modal h2 { margin: 0 0 6px; font-size: 1.7rem; }
+    .modal-sub { margin: 0; color: var(--cp-text-muted); line-height: 1.35; }
+    .close {
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-surface);
+      color: var(--cp-text);
+      padding: 8px 10px;
+      font: inherit;
+      cursor: pointer;
+    }
+    .details {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .detail {
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-surface);
+      padding: 12px;
+    }
+    .detail strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--cp-text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      font-size: 0.75rem;
+    }
+    .detail p, .detail ul { margin: 0; line-height: 1.45; }
+    .detail ul { padding-left: 18px; }
+    .video-link {
+      display: inline-flex;
+      margin-top: 10px;
+      padding: 9px 10px;
+      border: 1px solid var(--cp-border);
+      border-radius: 0.625rem;
+      background: var(--cp-accent-soft);
+      color: var(--cp-link);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    @media (max-width: 1000px) {
+      .page { padding: 18px; }
+      .hero, .legend, .moehe-grid, .value-grid, .role-map, .details, .modal-head { grid-template-columns: 1fr; }
+      .ptable { min-width: 1640px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <section>
+        <h1>Periodic Table of Education Agents</h1>
+        <p class="subtitle">A licensing-first periodic table for education: Periods 1-2 contain Copilot Chat education agents, Periods 3-4 contain Microsoft 365 agents, and Periods 5-7 contain custom Copilot Studio agents, including MOEHE Qatar scenarios.</p>
+      </section>
+      <aside class="panel">
+        <h2>How to use it</h2>
+        <p>Click any element to see its audience, features, use cases, build path, systems, guardrails, and video link. The layout intentionally leaves gaps like a real periodic table.</p>
+        <p style="margin-top:10px;">Reference inputs: <a href="https://victorious-beach-072d7db03.7.azurestaticapps.net/calculator/calculator.html" target="_blank" rel="noreferrer">M365 Copilot Education Value Calculator</a> and <a href="http://microsoft.nerd.education/" target="_blank" rel="noreferrer">Microsoft EDU guide</a>.</p>
+      </aside>
+    </header>
+
+    <section class="legend">
+      <div class="panel"><div class="stripe a1"></div><h3>Periods 1-2: Copilot Chat</h3><p>Copilot Chat, Teach, Study & Learn, and Notebook experiences.</p></div>
+      <div class="panel"><div class="stripe paid"></div><h3>Periods 3-4: M365 agents</h3><p>Researcher, Analyst, People, Visual Creator, Workflows, Office app agents, Planner, Teams, Interpreter, Briefings, and SharePoint agents.</p></div>
+      <div class="panel"><div class="stripe studio"></div><h3>Periods 5-7: Copilot Studio</h3><p>Custom transactional, workflow, decision-support, cross-organization, and oversight agents, including MOEHE Qatar scenarios.</p></div>
+    </section>
+
+    <section class="controls">
+      <input id="search" class="search" type="search" placeholder="Search Teacher Agent, Study & Learn, MOEHE, inspection, curriculum, family, etc.">
+      <button class="pill" type="button" data-filter="all" aria-pressed="true">All</button>
+      <button class="pill" type="button" data-filter="Copilot Chat">Copilot Chat</button>
+      <button class="pill" type="button" data-filter="M365 Agent">M365 Agents</button>
+      <button class="pill" type="button" data-filter="Copilot Studio">Copilot Studio</button>
+    </section>
+    <div id="empty" class="empty">No matching agents found.</div>
+
+    <section class="table-scroll">
+      <div id="ptable" class="ptable"></div>
+    </section>
+
+    <section class="moehe-section panel">
+      <h2>Which agents fit each education persona</h2>
+      <p>Pick a persona to see the best-fit agents by license path. Icons match the ones used in the periodic table.</p>
+      <div id="moeheGrid" class="moehe-grid"></div>
+    </section>
+  </main>
+
+  <dialog id="dialog">
+    <div class="modal">
+      <div class="modal-head">
+        <div id="modalTile" class="big"></div>
+        <div>
+          <h2 id="modalName"></h2>
+          <p id="modalSub" class="modal-sub"></p>
+          <a id="modalVideo" class="video-link" target="_blank" rel="noreferrer">Open reference link</a>
+        </div>
+        <button id="close" class="close" type="button">Close</button>
+      </div>
+      <div class="details">
+        <div class="detail"><strong>Main purpose</strong><p id="modalPurpose"></p></div>
+        <div class="detail"><strong>License / build path</strong><p id="modalLicense"></p></div>
+        <div class="detail"><strong>Features</strong><ul id="modalFeatures"></ul></div>
+        <div class="detail"><strong>Example education use cases</strong><ul id="modalUseCases"></ul></div>
+        <div class="detail"><strong>Grounding / systems</strong><p id="modalSystems"></p></div>
+        <div class="detail"><strong>Guardrails</strong><p id="modalGuardrails"></p></div>
+      </div>
+    </div>
+  </dialog>
+
+  <script>
+    const video = (query) => `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+    const notebookUrl = (pageName) => {
+      const base = "https://microsofteur-my.sharepoint.com/personal/obarcelo_microsoft_com/_layouts/15/Doc.aspx?sourcedoc=%7Bde16b9ff-3676-4fd0-aa23-b619a1675582%7D&action=view&wd=target%28%E2%9E%A1%EF%B8%8F%2026%20Declarative%20Agents%20%28Web-Grounded%5C%29.one%7C949d4536-6a07-4037-963d-67116bc6cfc9%2F";
+      const suffix = "%2F%29&wdorigin=NavigationUrl";
+      return base + encodeURIComponent(pageName) + suffix;
+    };
+    const categoryClass = (category) => category === "Copilot Chat" ? "freechat" : category === "M365 Agent" ? "freem365" : "studio";
+    const productIcon = (app) => {
+      const icons = {
+        m365: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="m365g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ea3e23"/><stop offset="1" stop-color="#c62c1c"/></linearGradient></defs>
+          <rect x="6" y="6" width="24" height="24" rx="2" fill="#f25022"/>
+          <rect x="34" y="6" width="24" height="24" rx="2" fill="#7fba00"/>
+          <rect x="6" y="34" width="24" height="24" rx="2" fill="#00a4ef"/>
+          <rect x="34" y="34" width="24" height="24" rx="2" fill="#ffb900"/>
+        </svg>`,
+        word: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="wg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#41a5ee"/><stop offset="1" stop-color="#2b7cd3"/></linearGradient>
+            <linearGradient id="wg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#185abd"/><stop offset="1" stop-color="#103f91"/></linearGradient>
+          </defs>
+          <path d="M52 8H24a4 4 0 0 0-4 4v10h32V12a4 4 0 0 0-4-4z" fill="url(#wg1)"/>
+          <path d="M20 22h32v16H20z" fill="#185abd"/>
+          <path d="M20 38h32v14a4 4 0 0 1-4 4H24a4 4 0 0 1-4-4V38z" fill="url(#wg2)"/>
+          <rect x="6" y="18" width="30" height="28" rx="3" fill="#103f91"/>
+          <text x="21" y="38" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#fff">W</text>
+        </svg>`,
+        excel: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="xg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#33c481"/><stop offset="1" stop-color="#21a366"/></linearGradient>
+            <linearGradient id="xg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#107c41"/><stop offset="1" stop-color="#0b6a33"/></linearGradient>
+          </defs>
+          <path d="M52 8H24a4 4 0 0 0-4 4v10h32V12a4 4 0 0 0-4-4z" fill="url(#xg1)"/>
+          <path d="M20 22h32v16H20z" fill="#107c41"/>
+          <path d="M20 38h32v14a4 4 0 0 1-4 4H24a4 4 0 0 1-4-4V38z" fill="url(#xg2)"/>
+          <rect x="6" y="18" width="30" height="28" rx="3" fill="#0b6a33"/>
+          <text x="21" y="38" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#fff">X</text>
+        </svg>`,
+        powerpoint: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="pg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ed6c47"/><stop offset="1" stop-color="#d24726"/></linearGradient>
+            <linearGradient id="pg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff8f6b"/><stop offset="1" stop-color="#ed6c47"/></linearGradient>
+          </defs>
+          <circle cx="42" cy="32" r="22" fill="url(#pg1)"/>
+          <path d="M42 10a22 22 0 0 1 22 22H42z" fill="url(#pg2)"/>
+          <rect x="6" y="18" width="30" height="28" rx="3" fill="#b7472a"/>
+          <text x="21" y="38" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#fff">P</text>
+        </svg>`,
+        outlook: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="og1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#28a8ea"/><stop offset="1" stop-color="#0078d4"/></linearGradient>
+          </defs>
+          <path d="M56 14H24a4 4 0 0 0-4 4v28a4 4 0 0 0 4 4h32a4 4 0 0 0 4-4V18a4 4 0 0 0-4-4z" fill="url(#og1)"/>
+          <path d="M20 22 40 34 60 22v6L40 40 20 28z" fill="#50a7e8"/>
+          <rect x="6" y="18" width="24" height="28" rx="3" fill="#0a5fb4"/>
+          <text x="18" y="38" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#fff">O</text>
+        </svg>`,
+        teams: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="tg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7b83eb"/><stop offset="1" stop-color="#6264a7"/></linearGradient>
+          </defs>
+          <circle cx="50" cy="18" r="6" fill="#7b83eb"/>
+          <circle cx="43" cy="21" r="8" fill="#7b83eb"/>
+          <rect x="30" y="24" width="30" height="24" rx="4" fill="url(#tg1)"/>
+          <rect x="8" y="18" width="26" height="30" rx="4" fill="#464eb8"/>
+          <text x="21" y="40" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#fff">T</text>
+        </svg>`,
+        onenote: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="ng1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ca64ea"/><stop offset="1" stop-color="#a03fb8"/></linearGradient>
+            <linearGradient id="ng2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7719aa"/><stop offset="1" stop-color="#5a1385"/></linearGradient>
+          </defs>
+          <path d="M52 8H24a4 4 0 0 0-4 4v10h32V12a4 4 0 0 0-4-4z" fill="url(#ng1)"/>
+          <path d="M20 22h32v16H20z" fill="#7719aa"/>
+          <path d="M20 38h32v14a4 4 0 0 1-4 4H24a4 4 0 0 1-4-4V38z" fill="url(#ng2)"/>
+          <rect x="6" y="18" width="24" height="28" rx="3" fill="#5a1385"/>
+          <text x="18" y="38" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#fff">N</text>
+          <rect x="46" y="14" width="4" height="42" fill="#5a1385" opacity=".5"/>
+        </svg>`,
+        onedrive: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="odg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#28a8ea"/><stop offset="1" stop-color="#0078d4"/></linearGradient>
+            <linearGradient id="odg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#50c5f1"/><stop offset="1" stop-color="#28a8ea"/></linearGradient>
+          </defs>
+          <path d="M32 22c6 0 11 3 13 8 6 0 10 4 10 10s-5 10-12 10H18c-7 0-12-4-12-10s5-10 11-10c2-5 8-8 15-8z" fill="url(#odg1)"/>
+          <path d="M23 30c3-7 10-11 18-9 4 1 7 4 9 7-2-9-10-14-19-13-8 1-14 7-15 15 2-1 4-1 7 0z" fill="url(#odg2)" opacity=".9"/>
+        </svg>`,
+        sharepoint: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="spg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0364b8"/><stop offset="1" stop-color="#036c70"/></linearGradient>
+          </defs>
+          <circle cx="26" cy="20" r="12" fill="url(#spg1)"/>
+          <circle cx="42" cy="34" r="14" fill="#1a9ba1"/>
+          <circle cx="28" cy="46" r="10" fill="#37c6d0"/>
+          <text x="26" y="24" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="700" fill="#fff">S</text>
+        </svg>`,
+        planner: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="plg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#33c481"/><stop offset="1" stop-color="#107c41"/></linearGradient>
+          </defs>
+          <rect x="12" y="10" width="40" height="44" rx="4" fill="url(#plg1)"/>
+          <rect x="18" y="18" width="14" height="30" rx="2" fill="#0b5528"/>
+          <rect x="34" y="18" width="14" height="20" rx="2" fill="#0b6a33"/>
+          <circle cx="25" cy="24" r="2" fill="#fff"/>
+          <circle cx="25" cy="32" r="2" fill="#fff"/>
+          <circle cx="25" cy="40" r="2" fill="#fff"/>
+          <path d="M40 24l3 3 6-6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>`,
+        powerautomate: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="pag1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0078d4"/><stop offset="1" stop-color="#0364b8"/></linearGradient>
+          </defs>
+          <path d="M12 14h24l-10 16h22L18 58l10-20H14z" fill="url(#pag1)"/>
+        </svg>`,
+        copilot: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="cpg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00d4ff"/><stop offset=".5" stop-color="#0078d4"/><stop offset="1" stop-color="#8661c5"/></linearGradient>
+          </defs>
+          <path d="M32 8c14 0 24 10 24 24s-10 24-24 24S8 46 8 32 18 8 32 8zm-6 16c-4 0-8 4-8 8s4 8 8 8c2 0 4-1 5-2l-3-3c-1 0-1 1-2 1-2 0-4-2-4-4s2-4 4-4c2 0 4 2 4 4h4c0-4-4-8-8-8zm12 0c-4 0-8 4-8 8s4 8 8 8c4 0 8-4 8-8s-4-8-8-8zm0 4c2 0 4 2 4 4s-2 4-4 4-4-2-4-4 2-4 4-4z" fill="url(#cpg1)"/>
+        </svg>`,
+        researcher: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="rg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#41a5ee"/><stop offset="1" stop-color="#0364b8"/></linearGradient>
+          </defs>
+          <circle cx="28" cy="28" r="16" fill="none" stroke="url(#rg1)" stroke-width="6"/>
+          <line x1="40" y1="40" x2="54" y2="54" stroke="url(#rg1)" stroke-width="6" stroke-linecap="round"/>
+          <path d="M22 26h12M22 30h12M22 34h8" stroke="#0364b8" stroke-width="2" stroke-linecap="round"/>
+        </svg>`,
+        people: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="ppg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#50a7e8"/><stop offset="1" stop-color="#0078d4"/></linearGradient>
+          </defs>
+          <circle cx="24" cy="22" r="8" fill="url(#ppg1)"/>
+          <path d="M8 46c0-8 7-14 16-14s16 6 16 14v6H8z" fill="url(#ppg1)"/>
+          <circle cx="46" cy="26" r="6" fill="#7b83eb"/>
+          <path d="M34 50c2-6 7-10 12-10s10 4 12 10v4H34z" fill="#7b83eb"/>
+        </svg>`,
+        education: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="edg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#33c481"/><stop offset="1" stop-color="#107c41"/></linearGradient>
+          </defs>
+          <path d="M32 10 4 22l28 12 28-12z" fill="url(#edg1)"/>
+          <path d="M14 28v12c0 4 8 8 18 8s18-4 18-8V28l-18 8z" fill="#0b6a33"/>
+          <path d="M58 24v14" stroke="#107c41" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="58" cy="40" r="2" fill="#107c41"/>
+        </svg>`,
+        forms: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="fmg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#50c5f1"/><stop offset="1" stop-color="#036c70"/></linearGradient>
+          </defs>
+          <rect x="12" y="8" width="40" height="48" rx="4" fill="url(#fmg1)"/>
+          <path d="M20 18h4M28 18h16M20 26h4M28 26h16M20 34h4M28 34h16M20 42h4M28 42h16" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          <path d="M19 17l2 2 3-3M19 25l2 2 3-3M19 33l2 2 3-3M19 41l2 2 3-3" stroke="#fff" stroke-width="1.5" fill="none"/>
+        </svg>`,
+        powerbi: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="pbg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f5c60c"/><stop offset="1" stop-color="#e8a600"/></linearGradient>
+          </defs>
+          <rect x="10" y="30" width="10" height="24" rx="2" fill="url(#pbg1)"/>
+          <rect x="26" y="18" width="10" height="36" rx="2" fill="url(#pbg1)"/>
+          <rect x="42" y="8" width="10" height="46" rx="2" fill="url(#pbg1)"/>
+        </svg>`,
+        teacher: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="tchg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#41a5ee"/><stop offset="1" stop-color="#0364b8"/></linearGradient>
+            <linearGradient id="tchg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#33c481"/><stop offset="1" stop-color="#107c41"/></linearGradient>
+          </defs>
+          <path d="M32 6 6 16l26 10 26-10z" fill="url(#tchg1)"/>
+          <path d="M16 20v10c0 6 8 10 16 10s16-4 16-10V20l-16 6z" fill="#0364b8"/>
+          <path d="M56 18v14" stroke="#0364b8" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="56" cy="34" r="2" fill="#0364b8"/>
+          <circle cx="32" cy="48" r="6" fill="url(#tchg2)"/>
+          <path d="M20 62c0-6 5-10 12-10s12 4 12 10z" fill="url(#tchg2)"/>
+        </svg>`,
+        student: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="stg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb900"/><stop offset="1" stop-color="#e8a600"/></linearGradient>
+            <linearGradient id="stg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#41a5ee"/><stop offset="1" stop-color="#0078d4"/></linearGradient>
+          </defs>
+          <circle cx="32" cy="20" r="10" fill="url(#stg2)"/>
+          <path d="M14 58c0-10 8-18 18-18s18 8 18 18z" fill="url(#stg2)"/>
+          <path d="M18 32h28l-4 8H22z" fill="url(#stg1)"/>
+          <rect x="22" y="40" width="20" height="4" rx="1" fill="#b7472a"/>
+          <path d="M42 30v6l3-1v-6z" fill="#8661c5"/>
+        </svg>`,
+        overseer: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="ovg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6264a7"/><stop offset="1" stop-color="#3d3f8c"/></linearGradient>
+          </defs>
+          <path d="M32 6 8 14v18c0 14 10 24 24 26 14-2 24-12 24-26V14z" fill="url(#ovg1)"/>
+          <circle cx="32" cy="30" r="5" fill="#fff"/>
+          <ellipse cx="32" cy="30" rx="14" ry="9" fill="none" stroke="#fff" stroke-width="2.5"/>
+          <circle cx="32" cy="30" r="2.5" fill="#3d3f8c"/>
+        </svg>`,
+        operations: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="opg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#50a7e8"/><stop offset="1" stop-color="#0364b8"/></linearGradient>
+          </defs>
+          <path d="M32 8v6l4 2 4-4 4 4-4 4 2 4h6v8h-6l-2 4 4 4-4 4-4-4-4 2v6h-8v-6l-4-2-4 4-4-4 4-4-2-4H8v-8h6l2-4-4-4 4-4 4 4 4-2V8z" fill="url(#opg1)"/>
+          <circle cx="32" cy="32" r="6" fill="#fff"/>
+        </svg>`,
+        wellbeing: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="wbg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff7b7b"/><stop offset="1" stop-color="#d24726"/></linearGradient>
+          </defs>
+          <path d="M32 56C18 46 6 36 6 22c0-8 6-14 14-14 5 0 9 3 12 7 3-4 7-7 12-7 8 0 14 6 14 14 0 14-12 24-26 34z" fill="url(#wbg1)"/>
+          <path d="M22 24l6 6 14-14" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none"/>
+        </svg>`,
+        attendance: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="atg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#41a5ee"/><stop offset="1" stop-color="#0078d4"/></linearGradient>
+          </defs>
+          <rect x="10" y="12" width="44" height="44" rx="5" fill="url(#atg1)"/>
+          <rect x="10" y="12" width="44" height="12" rx="5" fill="#0364b8"/>
+          <rect x="18" y="6" width="4" height="12" rx="1" fill="#0a5fb4"/>
+          <rect x="42" y="6" width="4" height="12" rx="1" fill="#0a5fb4"/>
+          <path d="M20 38l6 6 14-14" stroke="#fff" stroke-width="3" stroke-linecap="round" fill="none"/>
+        </svg>`,
+        admissions: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="adg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffb900"/><stop offset="1" stop-color="#d24726"/></linearGradient>
+          </defs>
+          <path d="M8 20a4 4 0 0 1 4-4h40a4 4 0 0 1 4 4v6a4 4 0 0 0 0 8v10a4 4 0 0 1-4 4H12a4 4 0 0 1-4-4V34a4 4 0 0 0 0-8z" fill="url(#adg1)"/>
+          <path d="M28 20v24" stroke="#fff" stroke-width="2" stroke-dasharray="3 3"/>
+          <text x="18" y="36" font-family="Segoe UI, Arial, sans-serif" font-size="8" font-weight="700" fill="#fff">ADMIT</text>
+        </svg>`,
+        event: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="evg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ca64ea"/><stop offset="1" stop-color="#7719aa"/></linearGradient>
+          </defs>
+          <rect x="10" y="14" width="44" height="42" rx="5" fill="url(#evg1)"/>
+          <rect x="10" y="14" width="44" height="10" rx="5" fill="#5a1385"/>
+          <circle cx="20" cy="34" r="3" fill="#fff"/>
+          <circle cx="32" cy="34" r="3" fill="#fff"/>
+          <circle cx="44" cy="34" r="3" fill="#fff"/>
+          <circle cx="20" cy="44" r="3" fill="#fff"/>
+          <circle cx="32" cy="44" r="3" fill="#fff" opacity=".5"/>
+          <path d="M42 42l3 3 6-6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>`,
+        curriculum: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="cug1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#33c481"/><stop offset="1" stop-color="#107c41"/></linearGradient>
+          </defs>
+          <path d="M8 14v36c8-4 16-4 24 0V14c-8-4-16-4-24 0z" fill="url(#cug1)"/>
+          <path d="M56 14v36c-8-4-16-4-24 0V14c8-4 16-4 24 0z" fill="#0b6a33"/>
+          <path d="M32 14v36" stroke="#fff" stroke-width="1.5" opacity=".6"/>
+          <path d="M14 22h12M14 28h12M14 34h10M38 22h12M38 28h12M38 34h10" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+        </svg>`,
+        family: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="fmg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8f6b"/><stop offset="1" stop-color="#d24726"/></linearGradient>
+          </defs>
+          <circle cx="20" cy="22" r="7" fill="url(#fmg1)"/>
+          <circle cx="44" cy="22" r="7" fill="#8661c5"/>
+          <circle cx="32" cy="42" r="5" fill="#ffb900"/>
+          <path d="M8 46c0-7 6-12 12-12s12 5 12 12z" fill="url(#fmg1)"/>
+          <path d="M32 46c0-7 6-12 12-12s12 5 12 12z" fill="#8661c5"/>
+          <path d="M22 58c0-6 5-10 10-10s10 4 10 10z" fill="#ffb900"/>
+        </svg>`,
+        loop: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="lpg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7b83eb"/><stop offset="1" stop-color="#6264a7"/></linearGradient>
+            <linearGradient id="lpg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7b7b"/><stop offset="1" stop-color="#d24726"/></linearGradient>
+          </defs>
+          <path d="M32 8c-13 0-24 11-24 24s11 24 24 24c8 0 15-4 19-10-3 2-6 3-10 3-9 0-17-7-17-17s8-17 17-17c4 0 7 1 10 3-4-6-11-10-19-10z" fill="url(#lpg1)"/>
+          <path d="M40 20c-7 0-12 5-12 12s5 12 12 12 12-5 12-12-5-12-12-12zm0 5a7 7 0 1 1 0 14 7 7 0 0 1 0-14z" fill="url(#lpg2)"/>
+          <circle cx="40" cy="32" r="3" fill="#fff"/>
+        </svg>`,
+        ideaCoach: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="idg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd240"/><stop offset="1" stop-color="#ffb900"/></linearGradient>
+          </defs>
+          <path d="M32 6c-10 0-18 8-18 18 0 6 3 12 8 15v7a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3v-7c5-3 8-9 8-15 0-10-8-18-18-18z" fill="url(#idg1)"/>
+          <rect x="24" y="52" width="16" height="3" rx="1" fill="#8a1740"/>
+          <rect x="26" y="56" width="12" height="3" rx="1" fill="#8a1740"/>
+          <path d="M28 32c0-4 2-6 4-8M32 40v-8" stroke="#8a1740" stroke-width="2" stroke-linecap="round" fill="none"/>
+        </svg>`,
+        writingCoach: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="wcg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#50a7e8"/><stop offset="1" stop-color="#0078d4"/></linearGradient>
+            <linearGradient id="wcg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb900"/><stop offset="1" stop-color="#d24726"/></linearGradient>
+          </defs>
+          <rect x="10" y="8" width="36" height="48" rx="4" fill="url(#wcg1)"/>
+          <path d="M18 20h20M18 28h20M18 36h14" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          <path d="M46 22l10 10-14 14-10-10z" fill="url(#wcg2)"/>
+          <path d="M32 46l-6 6 8-2z" fill="#8a1740"/>
+        </svg>`,
+        careerCoach: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="ccg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8661c5"/><stop offset="1" stop-color="#6264a7"/></linearGradient>
+          </defs>
+          <rect x="8" y="20" width="48" height="34" rx="6" fill="url(#ccg1)"/>
+          <path d="M24 20v-6a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v6" stroke="#464eb8" stroke-width="3" fill="none"/>
+          <rect x="8" y="30" width="48" height="4" fill="#464eb8"/>
+          <rect x="28" y="34" width="8" height="6" rx="1" fill="#ffb900"/>
+        </svg>`,
+        frontline: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="frg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7b83eb"/><stop offset="1" stop-color="#464eb8"/></linearGradient>
+          </defs>
+          <rect x="14" y="10" width="36" height="48" rx="5" fill="url(#frg1)"/>
+          <rect x="22" y="6" width="20" height="10" rx="2" fill="#464eb8"/>
+          <path d="M20 26h24M20 34h24M20 42h16" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="42" cy="48" r="3" fill="#ffb900"/>
+        </svg>`,
+        sme: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="smg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8661c5"/><stop offset="1" stop-color="#4b3a8a"/></linearGradient>
+          </defs>
+          <circle cx="20" cy="24" r="7" fill="url(#smg1)"/>
+          <circle cx="44" cy="24" r="7" fill="url(#smg1)"/>
+          <circle cx="32" cy="18" r="8" fill="url(#smg1)"/>
+          <path d="M32 22l2 4 5 1-4 3 1 5-4-3-4 3 1-5-4-3 5-1z" fill="#ffb900"/>
+          <path d="M8 50c0-7 5-12 12-12s12 5 12 12z" fill="url(#smg1)"/>
+          <path d="M32 50c0-7 5-12 12-12s12 5 12 12z" fill="url(#smg1)"/>
+        </svg>`,
+        appBuilder: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="abg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ca64ea"/><stop offset="1" stop-color="#8661c5"/></linearGradient>
+          </defs>
+          <path d="M32 6 8 20v24l24 14 24-14V20z" fill="url(#abg1)"/>
+          <path d="M32 6v52M8 20l24 14 24-14" stroke="#fff" stroke-width="1.5" opacity=".7" fill="none"/>
+          <circle cx="32" cy="34" r="6" fill="#fff"/>
+          <path d="M28 34l3 3 6-6" stroke="#8661c5" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        </svg>`,
+        planMyDay: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="pdg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#41a5ee"/><stop offset="1" stop-color="#0078d4"/></linearGradient>
+          </defs>
+          <rect x="10" y="12" width="44" height="44" rx="5" fill="url(#pdg1)"/>
+          <rect x="10" y="12" width="44" height="12" rx="5" fill="#0364b8"/>
+          <path d="M46 8c1-3 4-5 8-4-2 3-5 5-8 4z" fill="#ffb900"/>
+          <circle cx="42" cy="10" r="4" fill="#ffb900"/>
+          <path d="M40 6l2 2M44 6l-2 2" stroke="#ffb900" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="24" cy="38" r="9" fill="#fff"/>
+          <path d="M24 34v4l3 2" stroke="#d24726" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <rect x="38" y="34" width="12" height="2" rx="1" fill="#fff"/>
+          <rect x="38" y="38" width="10" height="2" rx="1" fill="#fff"/>
+          <rect x="38" y="42" width="12" height="2" rx="1" fill="#fff"/>
+          <rect x="38" y="46" width="8" height="2" rx="1" fill="#fff"/>
+        </svg>`,
+        workforce: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="wig1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#33c481"/><stop offset="1" stop-color="#0078d4"/></linearGradient>
+          </defs>
+          <circle cx="32" cy="16" r="6" fill="url(#wig1)"/>
+          <circle cx="16" cy="26" r="5" fill="url(#wig1)"/>
+          <circle cx="48" cy="26" r="5" fill="url(#wig1)"/>
+          <path d="M32 22v10M16 31v4M48 31v4" stroke="#0078d4" stroke-width="2"/>
+          <rect x="10" y="38" width="14" height="18" rx="2" fill="#0078d4"/>
+          <rect x="25" y="34" width="14" height="22" rx="2" fill="#33c481"/>
+          <rect x="40" y="38" width="14" height="18" rx="2" fill="#0364b8"/>
+        </svg>`,
+        promptCoach: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="prg1" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#4fa8ff"/><stop offset=".5" stop-color="#c85df0"/><stop offset="1" stop-color="#ff69b4"/></linearGradient>
+          </defs>
+          <path d="M12 16h30a8 8 0 0 1 8 8v10a8 8 0 0 1-8 8H24l-10 8v-8a8 8 0 0 1-8-8V24a8 8 0 0 1 6-8z" fill="url(#prg1)"/>
+          <rect x="16" y="24" width="14" height="3" rx="1.5" fill="#fff" opacity=".9"/>
+          <rect x="16" y="30" width="20" height="3" rx="1.5" fill="#fff" opacity=".9"/>
+          <rect x="16" y="36" width="16" height="3" rx="1.5" fill="#fff" opacity=".9"/>
+          <path d="M50 6l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#f0b6ff"/>
+          <path d="M56 22l1.5 3.5 3.5 1.5-3.5 1.5-1.5 3.5-1.5-3.5-3.5-1.5 3.5-1.5z" fill="#f0b6ff"/>
+        </svg>`,
+        copilotRibbon: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="crg1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#00d4ff"/>
+              <stop offset=".2" stop-color="#33c481"/>
+              <stop offset=".45" stop-color="#ffb900"/>
+              <stop offset=".7" stop-color="#ff69b4"/>
+              <stop offset="1" stop-color="#8661c5"/>
+            </linearGradient>
+            <linearGradient id="crg2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#0078d4"/>
+              <stop offset=".5" stop-color="#41a5ee"/>
+              <stop offset="1" stop-color="#33c481"/>
+            </linearGradient>
+          </defs>
+          <path d="M18 10c-7 0-12 5-12 12v20c0 4 3 8 8 8 3 0 6-2 7-5l2-6c1-2 3-4 5-4h4c2 0 4-1 5-3l3-6c1-2 3-4 6-4 4 0 8 3 8 8v6c0 3-3 6-6 6h-8c-3 0-5 2-6 4l-2 5c-2 4-6 6-10 6-6 0-10-4-10-10z" fill="url(#crg1)"/>
+          <path d="M32 12c4 0 8 3 8 8v4l-4 8c-1 2-3 4-6 4h-8c-4 0-8-3-8-8v-4l4-8c1-2 3-4 6-4z" fill="url(#crg2)" opacity=".9"/>
+        </svg>`,
+        robot: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="rbg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a29ef5"/><stop offset="1" stop-color="#6264a7"/></linearGradient>
+            <linearGradient id="rbg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfe0f4"/><stop offset="1" stop-color="#8f92c9"/></linearGradient>
+          </defs>
+          <rect x="14" y="10" width="4" height="10" rx="2" fill="#7b83eb"/>
+          <rect x="46" y="10" width="4" height="10" rx="2" fill="#7b83eb"/>
+          <circle cx="16" cy="8" r="3" fill="#7b83eb"/>
+          <circle cx="48" cy="8" r="3" fill="#7b83eb"/>
+          <rect x="12" y="18" width="40" height="30" rx="10" fill="url(#rbg1)"/>
+          <rect x="18" y="24" width="28" height="16" rx="6" fill="#1a1a2e"/>
+          <circle cx="26" cy="32" r="3" fill="#fff"/>
+          <circle cx="38" cy="32" r="3" fill="#fff"/>
+          <rect x="8" y="26" width="6" height="14" rx="3" fill="url(#rbg2)"/>
+          <rect x="50" y="26" width="6" height="14" rx="3" fill="url(#rbg2)"/>
+          <ellipse cx="32" cy="54" rx="14" ry="4" fill="#000" opacity=".2"/>
+          <path d="M20 44h24v6c0 3-3 6-6 6H26c-3 0-6-3-6-6z" fill="url(#rbg2)"/>
+          <circle cx="32" cy="49" r="2" fill="#ff8fb7"/>
+        </svg>`,
+        knowledge: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="kng1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb900"/><stop offset="1" stop-color="#d67d00"/></linearGradient>
+            <linearGradient id="kng2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#41a5ee"/><stop offset="1" stop-color="#0364b8"/></linearGradient>
+          </defs>
+          <path d="M32 8c-9 0-16 6-16 15 0 5 3 10 8 12v5h16v-5c5-2 8-7 8-12 0-9-7-15-16-15z" fill="url(#kng1)"/>
+          <rect x="24" y="42" width="16" height="4" rx="1" fill="#464646"/>
+          <rect x="26" y="48" width="12" height="4" rx="1" fill="#464646"/>
+          <path d="M26 22c0-3 3-6 6-6s6 3 6 6-2 5-3 6-3 3-3 5" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <circle cx="32" cy="38" r="1.5" fill="#fff"/>
+        </svg>`,
+        legal: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="lgg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8661c5"/><stop offset="1" stop-color="#4b3a8a"/></linearGradient>
+          </defs>
+          <rect x="30" y="10" width="4" height="44" rx="1" fill="url(#lgg1)"/>
+          <rect x="20" y="52" width="24" height="4" rx="1" fill="url(#lgg1)"/>
+          <path d="M16 18h14l-7 12z" fill="url(#lgg1)"/>
+          <path d="M34 18h14l-7 12z" fill="url(#lgg1)"/>
+          <line x1="12" y1="30" x2="26" y2="30" stroke="#4b3a8a" stroke-width="2" stroke-linecap="round"/>
+          <line x1="38" y1="30" x2="52" y2="30" stroke="#4b3a8a" stroke-width="2" stroke-linecap="round"/>
+          <rect x="26" y="6" width="12" height="6" rx="1" fill="url(#lgg1)"/>
+        </svg>`,
+        learningCoach: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="lcg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#41a5ee"/><stop offset="1" stop-color="#0078d4"/></linearGradient>
+            <linearGradient id="lcg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#33c481"/><stop offset="1" stop-color="#107c41"/></linearGradient>
+          </defs>
+          <circle cx="20" cy="20" r="8" fill="url(#lcg1)"/>
+          <path d="M6 44c0-8 6-14 14-14s14 6 14 14v6H6z" fill="url(#lcg1)"/>
+          <path d="M32 30c8-4 20-4 26 0v18c-6-4-18-4-26 0z" fill="url(#lcg2)"/>
+          <path d="M32 30v18M45 27v3M45 34v3M45 40v3" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>`,
+        selfService: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="ssg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ca64ea"/><stop offset="1" stop-color="#7719aa"/></linearGradient>
+          </defs>
+          <circle cx="32" cy="22" r="10" fill="url(#ssg1)"/>
+          <path d="M14 56c0-9 8-16 18-16s18 7 18 16z" fill="url(#ssg1)"/>
+          <rect x="24" y="36" width="16" height="8" rx="1" fill="#fff" opacity=".85"/>
+          <line x1="27" y1="40" x2="37" y2="40" stroke="#7719aa" stroke-width="1.5"/>
+          <circle cx="50" cy="14" r="6" fill="#33c481"/>
+          <path d="M47 14l2 2 4-4" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>`,
+        studyGuide: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="sgg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#41a5ee"/><stop offset="1" stop-color="#0364b8"/></linearGradient></defs>
+          <rect x="10" y="8" width="44" height="48" rx="4" fill="url(#sgg1)"/>
+          <rect x="14" y="12" width="36" height="40" rx="2" fill="#fff"/>
+          <path d="M18 20h20M18 26h20M18 32h20M18 38h14" stroke="#0364b8" stroke-width="2" stroke-linecap="round"/>
+          <path d="M42 40l6 6 8-10" stroke="#33c481" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`,
+        mindMapper: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="mmg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8661c5"/><stop offset="1" stop-color="#4b3a8a"/></linearGradient></defs>
+          <circle cx="32" cy="32" r="10" fill="url(#mmg1)"/>
+          <circle cx="10" cy="14" r="6" fill="#41a5ee"/>
+          <circle cx="54" cy="14" r="6" fill="#33c481"/>
+          <circle cx="10" cy="50" r="6" fill="#ffb900"/>
+          <circle cx="54" cy="50" r="6" fill="#d24726"/>
+          <path d="M14 18l14 10M50 18l-14 10M14 46l14-10M50 46l-14-10" stroke="#4b3a8a" stroke-width="2"/>
+        </svg>`,
+        socratic: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="scg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7b83eb"/><stop offset="1" stop-color="#464eb8"/></linearGradient></defs>
+          <path d="M14 10h30a8 8 0 0 1 8 8v14a8 8 0 0 1-8 8H26l-10 8V18a8 8 0 0 1 8-8z" fill="url(#scg1)"/>
+          <text x="32" y="32" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="22" font-weight="800" fill="#fff">?</text>
+          <circle cx="52" cy="52" r="6" fill="#ffb900"/>
+          <text x="52" y="55" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="9" font-weight="800" fill="#8a1740">!</text>
+        </svg>`,
+        meetingMentor: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="mtg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#41a5ee"/><stop offset="1" stop-color="#0078d4"/></linearGradient></defs>
+          <circle cx="20" cy="20" r="7" fill="url(#mtg1)"/>
+          <path d="M8 46c0-7 5-12 12-12s12 5 12 12z" fill="url(#mtg1)"/>
+          <circle cx="46" cy="18" r="5" fill="#ffb900"/>
+          <path d="M36 46c0-7 4-12 10-12s10 5 10 12z" fill="#ffb900"/>
+          <path d="M28 12c3-4 8-4 11 0" stroke="#d24726" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <circle cx="34" cy="10" r="1.5" fill="#d24726"/>
+        </svg>`,
+        meetingSummary: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="msg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#33c481"/><stop offset="1" stop-color="#107c41"/></linearGradient></defs>
+          <rect x="10" y="8" width="44" height="48" rx="4" fill="url(#msg1)"/>
+          <rect x="16" y="16" width="24" height="3" rx="1" fill="#fff"/>
+          <path d="M16 24l2 2 4-4M28 24h18M16 32l2 2 4-4M28 32h18M16 40l2 2 4-4M28 40h18M16 48l2 2 4-4M28 48h14" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        </svg>`,
+        teachingAdvisor: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="tag1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#41a5ee"/><stop offset="1" stop-color="#0364b8"/></linearGradient></defs>
+          <path d="M32 6 6 16l26 10 26-10z" fill="url(#tag1)"/>
+          <path d="M16 22v10c0 5 7 8 16 8s16-3 16-8V22l-16 6z" fill="#0364b8"/>
+          <path d="M56 18v14" stroke="#0364b8" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="56" cy="35" r="2.5" fill="#0364b8"/>
+          <circle cx="44" cy="52" r="4" fill="#ffb900"/>
+          <text x="44" y="55" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="6" font-weight="800" fill="#8a1740">i</text>
+        </svg>`,
+        academicResearcher: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="acr1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7719aa"/><stop offset="1" stop-color="#4b3a8a"/></linearGradient></defs>
+          <circle cx="26" cy="26" r="14" fill="none" stroke="url(#acr1)" stroke-width="5"/>
+          <line x1="38" y1="38" x2="54" y2="54" stroke="url(#acr1)" stroke-width="5" stroke-linecap="round"/>
+          <path d="M18 24h14M18 28h14M18 32h10" stroke="#7719aa" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M26 12v4M26 40v-4" stroke="#7719aa" stroke-width="2" stroke-linecap="round"/>
+        </svg>`,
+        tieredTask: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="ttg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb900"/><stop offset="1" stop-color="#d67d00"/></linearGradient></defs>
+          <rect x="8" y="40" width="14" height="16" rx="2" fill="url(#ttg1)"/>
+          <rect x="25" y="28" width="14" height="28" rx="2" fill="#ffb900"/>
+          <rect x="42" y="14" width="14" height="42" rx="2" fill="#d67d00"/>
+          <text x="15" y="52" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="800" fill="#fff">1</text>
+          <text x="32" y="48" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="800" fill="#fff">2</text>
+          <text x="49" y="42" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="800" fill="#fff">3</text>
+        </svg>`,
+        bloom: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="blg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#33c481"/><stop offset="1" stop-color="#107c41"/></linearGradient></defs>
+          <polygon points="32,8 50,20 44,20 44,58 20,58 20,20 14,20" fill="url(#blg1)"/>
+          <line x1="20" y1="30" x2="44" y2="30" stroke="#fff" stroke-width="1.5"/>
+          <line x1="20" y1="40" x2="44" y2="40" stroke="#fff" stroke-width="1.5"/>
+          <line x1="20" y1="50" x2="44" y2="50" stroke="#fff" stroke-width="1.5"/>
+        </svg>`,
+        aiProof: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="apg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6264a7"/><stop offset="1" stop-color="#3d3f8c"/></linearGradient></defs>
+          <path d="M32 6 8 14v18c0 14 10 24 24 26 14-2 24-12 24-26V14z" fill="url(#apg1)"/>
+          <text x="32" y="30" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="12" font-weight="800" fill="#fff">AI</text>
+          <path d="M20 40l8 8 16-16" stroke="#33c481" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`,
+        rubrics: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="rug1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d24726"/><stop offset="1" stop-color="#b7472a"/></linearGradient></defs>
+          <rect x="8" y="10" width="48" height="44" rx="4" fill="url(#rug1)"/>
+          <rect x="12" y="14" width="10" height="9" fill="#fff" opacity=".95"/>
+          <rect x="24" y="14" width="10" height="9" fill="#fff" opacity=".7"/>
+          <rect x="36" y="14" width="10" height="9" fill="#fff" opacity=".5"/>
+          <rect x="12" y="25" width="10" height="9" fill="#fff" opacity=".7"/>
+          <rect x="24" y="25" width="10" height="9" fill="#fff" opacity=".95"/>
+          <rect x="36" y="25" width="10" height="9" fill="#fff" opacity=".7"/>
+          <rect x="12" y="36" width="10" height="9" fill="#fff" opacity=".5"/>
+          <rect x="24" y="36" width="10" height="9" fill="#fff" opacity=".7"/>
+          <rect x="36" y="36" width="10" height="9" fill="#fff" opacity=".95"/>
+        </svg>`,
+        codeCreator: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="ccg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#464eb8"/><stop offset="1" stop-color="#1a1a2e"/></linearGradient></defs>
+          <rect x="6" y="10" width="52" height="44" rx="5" fill="url(#ccg1)"/>
+          <path d="M22 24l-8 8 8 8M42 24l8 8-8 8M28 44l8-24" stroke="#33c481" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`,
+        activeLearning: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="alg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#33c481"/><stop offset="1" stop-color="#107c41"/></linearGradient></defs>
+          <circle cx="20" cy="18" r="5" fill="url(#alg1)"/>
+          <circle cx="44" cy="18" r="5" fill="url(#alg1)"/>
+          <circle cx="32" cy="42" r="6" fill="#ffb900"/>
+          <path d="M20 25c-4 4-4 12 0 16M44 25c4 4 4 12 0 16" stroke="#107c41" stroke-width="2" fill="none"/>
+          <path d="M28 50c1 4 6 4 8 0" stroke="#d67d00" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M32 34v6" stroke="#d67d00" stroke-width="2" stroke-linecap="round"/>
+        </svg>`,
+        socialStoryteller: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="stog1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8f6b"/><stop offset="1" stop-color="#d24726"/></linearGradient></defs>
+          <rect x="8" y="10" width="48" height="36" rx="8" fill="url(#stog1)"/>
+          <circle cx="20" cy="28" r="3" fill="#fff"/>
+          <circle cx="32" cy="28" r="3" fill="#fff"/>
+          <circle cx="44" cy="28" r="3" fill="#fff"/>
+          <path d="M22 42l-6 10 10-4" fill="url(#stog1)"/>
+        </svg>`,
+        principalAdvisor: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="pag2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#41a5ee"/><stop offset="1" stop-color="#0078d4"/></linearGradient></defs>
+          <rect x="8" y="24" width="48" height="30" rx="2" fill="url(#pag2)"/>
+          <polygon points="32,6 4,24 60,24" fill="#0364b8"/>
+          <rect x="18" y="34" width="8" height="20" fill="#fff" opacity=".9"/>
+          <rect x="30" y="34" width="8" height="20" fill="#fff" opacity=".9"/>
+          <rect x="42" y="34" width="8" height="20" fill="#fff" opacity=".9"/>
+          <circle cx="32" cy="18" r="3" fill="#ffb900"/>
+        </svg>`,
+        aiEthics: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="aeg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8661c5"/><stop offset="1" stop-color="#4b3a8a"/></linearGradient></defs>
+          <rect x="30" y="14" width="4" height="34" rx="1" fill="url(#aeg1)"/>
+          <rect x="20" y="46" width="24" height="4" rx="1" fill="url(#aeg1)"/>
+          <path d="M14 20h14l-7 12z" fill="url(#aeg1)"/>
+          <path d="M36 20h14l-7 12z" fill="url(#aeg1)"/>
+          <text x="32" y="12" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="7" font-weight="800" fill="#4b3a8a">AI</text>
+        </svg>`,
+        interactiveLecture: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="ilg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d24726"/><stop offset="1" stop-color="#b7472a"/></linearGradient></defs>
+          <rect x="6" y="10" width="52" height="34" rx="3" fill="url(#ilg1)"/>
+          <rect x="10" y="14" width="44" height="26" rx="2" fill="#fff"/>
+          <path d="M14 22h16M14 28h20M14 34h12" stroke="#d24726" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="42" cy="30" r="6" fill="#ffb900"/>
+          <path d="M40 30l2 2 4-4" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <rect x="28" y="44" width="8" height="14" rx="1" fill="#b7472a"/>
+          <rect x="18" y="55" width="28" height="4" rx="1" fill="#b7472a"/>
+        </svg>`,
+        studyBuddy: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="sbg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8fb7"/><stop offset="1" stop-color="#d24726"/></linearGradient></defs>
+          <circle cx="20" cy="22" r="9" fill="url(#sbg1)"/>
+          <circle cx="44" cy="22" r="9" fill="#7b83eb"/>
+          <path d="M6 52c0-8 6-14 14-14s14 6 14 14z" fill="url(#sbg1)"/>
+          <path d="M30 52c0-8 6-14 14-14s14 6 14 14z" fill="#7b83eb"/>
+          <circle cx="17" cy="21" r="1.5" fill="#fff"/>
+          <circle cx="23" cy="21" r="1.5" fill="#fff"/>
+          <circle cx="41" cy="21" r="1.5" fill="#fff"/>
+          <circle cx="47" cy="21" r="1.5" fill="#fff"/>
+        </svg>`,
+        studyPlanner: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="spg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#41a5ee"/><stop offset="1" stop-color="#0078d4"/></linearGradient></defs>
+          <rect x="8" y="12" width="48" height="44" rx="4" fill="url(#spg2)"/>
+          <rect x="8" y="12" width="48" height="12" fill="#0364b8"/>
+          <rect x="16" y="6" width="4" height="12" rx="1" fill="#0a5fb4"/>
+          <rect x="44" y="6" width="4" height="12" rx="1" fill="#0a5fb4"/>
+          <circle cx="20" cy="34" r="2" fill="#fff"/>
+          <circle cx="32" cy="34" r="2" fill="#fff"/>
+          <circle cx="44" cy="34" r="2" fill="#ffb900"/>
+          <circle cx="20" cy="44" r="2" fill="#fff"/>
+          <circle cx="32" cy="44" r="2" fill="#ffb900"/>
+          <circle cx="44" cy="44" r="2" fill="#fff"/>
+        </svg>`,
+        assessingPapers: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="apg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#33c481"/><stop offset="1" stop-color="#107c41"/></linearGradient></defs>
+          <rect x="12" y="8" width="34" height="44" rx="3" fill="#fff" stroke="#107c41" stroke-width="2"/>
+          <path d="M18 16h22M18 22h22M18 28h22M18 34h16M18 40h18" stroke="#107c41" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="46" cy="46" r="10" fill="url(#apg2)"/>
+          <text x="46" y="50" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="800" fill="#fff">A+</text>
+        </svg>`,
+        handwrittenGrader: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="hgg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb900"/><stop offset="1" stop-color="#d67d00"/></linearGradient></defs>
+          <rect x="10" y="10" width="40" height="46" rx="3" fill="#fff" stroke="#d67d00" stroke-width="2"/>
+          <path d="M16 22c4-4 8-2 12 0M16 30c4-4 8-2 12 0M16 38c4-4 8-2 12 0" stroke="#0078d4" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M32 50l14-14 6 6-14 14z" fill="url(#hgg1)"/>
+          <path d="M46 36l6 6" stroke="#8a1740" stroke-width="2"/>
+        </svg>`,
+        botASaurus: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="btg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#33c481"/><stop offset="1" stop-color="#107c41"/></linearGradient></defs>
+          <path d="M14 46c0-10 8-18 18-18s18 8 18 18v6H14z" fill="url(#btg1)"/>
+          <path d="M32 28c0-8 6-14 14-14 4 0 8 2 8 6 0 4-2 6-6 6-2 0-4 1-4 4v10" fill="url(#btg1)"/>
+          <circle cx="46" cy="20" r="2.5" fill="#fff"/>
+          <circle cx="46" cy="20" r="1.2" fill="#1a1a2e"/>
+          <path d="M20 40l3-3 3 3 3-3 3 3 3-3 3 3" stroke="#fff" stroke-width="1.5" fill="none"/>
+          <rect x="18" y="52" width="6" height="8" rx="1" fill="#107c41"/>
+          <rect x="40" y="52" width="6" height="8" rx="1" fill="#107c41"/>
+        </svg>`,
+        rolePlay: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="rpg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d24726"/><stop offset="1" stop-color="#b7472a"/></linearGradient></defs>
+          <path d="M10 32c4-10 12-14 22-8 10-6 18-2 22 8-4 10-12 14-22 8-10 6-18 2-22-8z" fill="url(#rpg1)"/>
+          <path d="M20 32c0-6 4-10 8-10M44 32c0 6-4 10-8 10" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <circle cx="20" cy="32" r="3" fill="#fff"/>
+          <circle cx="44" cy="32" r="3" fill="#fff"/>
+        </svg>`,
+        courseCreation: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="crc1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#41a5ee"/><stop offset="1" stop-color="#0364b8"/></linearGradient></defs>
+          <rect x="8" y="12" width="48" height="40" rx="3" fill="url(#crc1)"/>
+          <rect x="12" y="16" width="14" height="32" rx="2" fill="#fff" opacity=".95"/>
+          <rect x="30" y="16" width="10" height="14" rx="2" fill="#fff" opacity=".85"/>
+          <rect x="42" y="16" width="10" height="14" rx="2" fill="#fff" opacity=".85"/>
+          <rect x="30" y="34" width="22" height="14" rx="2" fill="#fff" opacity=".85"/>
+          <rect x="14" y="20" width="10" height="2" fill="#0364b8"/>
+          <rect x="14" y="25" width="10" height="2" fill="#0364b8"/>
+          <rect x="14" y="30" width="8" height="2" fill="#0364b8"/>
+        </svg>`,
+        selfAssessment: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="sac1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8661c5"/><stop offset="1" stop-color="#4b3a8a"/></linearGradient></defs>
+          <rect x="10" y="8" width="44" height="48" rx="3" fill="url(#sac1)"/>
+          <path d="M18 18h4v4h-4zM26 20h20M18 28h4v4h-4zM26 30h20M18 38h4v4h-4zM26 40h20M18 48h4v4h-4zM26 50h14" stroke="#fff" stroke-width="1.5" fill="#fff"/>
+          <path d="M18 18l4 4M22 18l-4 4" stroke="#fff" stroke-width="1.5"/>
+          <path d="M18 28l4 4M22 28l-4 4" stroke="#fff" stroke-width="1.5"/>
+          <path d="M18 38l4 4M22 38l-4 4" stroke="#fff" stroke-width="1.5"/>
+        </svg>`,
+        documentChecker: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="dch1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#41a5ee"/><stop offset="1" stop-color="#0364b8"/></linearGradient></defs>
+          <path d="M14 8h26l10 10v34a4 4 0 0 1-4 4H14a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4z" fill="url(#dch1)"/>
+          <path d="M40 8v10h10" fill="#0a5fb4"/>
+          <path d="M18 30h20M18 36h20M18 42h14" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/>
+          <circle cx="46" cy="48" r="9" fill="#33c481"/>
+          <path d="M42 48l3 3 6-6" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>`,
+        aiAgent: `<svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs>
+            <linearGradient id="aig1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b11f4b"/><stop offset="1" stop-color="#8a1740"/></linearGradient>
+          </defs>
+          <rect x="10" y="16" width="44" height="32" rx="10" fill="url(#aig1)"/>
+          <rect x="18" y="8" width="4" height="10" rx="2" fill="#8a1740"/>
+          <rect x="42" y="8" width="4" height="10" rx="2" fill="#8a1740"/>
+          <circle cx="20" cy="10" r="3" fill="#ffb900"/>
+          <circle cx="44" cy="10" r="3" fill="#ffb900"/>
+          <circle cx="24" cy="30" r="5" fill="#fff"/>
+          <circle cx="40" cy="30" r="5" fill="#fff"/>
+          <circle cx="24" cy="30" r="2.5" fill="#0078d4"/>
+          <circle cx="40" cy="30" r="2.5" fill="#0078d4"/>
+          <path d="M22 40h20" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="8" cy="32" r="3" fill="#8a1740"/>
+          <circle cx="56" cy="32" r="3" fill="#8a1740"/>
+        </svg>`
+      };
+      const title = {
+        m365: "Microsoft 365",
+        word: "Word",
+        excel: "Excel",
+        powerpoint: "PowerPoint",
+        outlook: "Outlook",
+        teams: "Teams",
+        onenote: "OneNote",
+        onedrive: "OneDrive",
+        sharepoint: "SharePoint",
+        planner: "Planner",
+        powerautomate: "Power Automate",
+        copilot: "Microsoft 365 Copilot",
+        researcher: "Researcher",
+        people: "People",
+        education: "Microsoft Education",
+        forms: "Forms",
+        powerbi: "Power BI",
+        teacher: "Teacher Agent",
+        student: "Student / Study & Learn",
+        overseer: "Oversight Agent",
+        operations: "Operations Agent",
+        wellbeing: "Wellbeing Agent",
+        attendance: "Attendance Agent",
+        admissions: "Admissions Agent",
+        event: "Event Agent",
+        curriculum: "Curriculum Agent",
+        family: "Family / Parent Agent",
+        loop: "Microsoft Loop",
+        ideaCoach: "Idea Coach",
+        writingCoach: "Writing Coach",
+        careerCoach: "Career Coach",
+        frontline: "Frontline Agent",
+        sme: "SME Finder",
+        appBuilder: "App Builder",
+        planMyDay: "Plan My Day",
+        workforce: "Workforce Insights",
+        promptCoach: "Prompt Coach",
+        copilotRibbon: "Microsoft Copilot",
+        robot: "Custom AI Agent",
+        knowledge: "Knowledge Agent",
+        legal: "Legal Agent",
+        learningCoach: "Learning Coach",
+        selfService: "Employee Self-Service Agent",
+        studyGuide: "Study Guide",
+        mindMapper: "Mind Mapper",
+        socratic: "Socratic Thinking Agent",
+        meetingMentor: "Meeting Mentor",
+        meetingSummary: "Meeting Summary & Follow-up",
+        teachingAdvisor: "Teaching Advisor",
+        academicResearcher: "Academic Researcher",
+        tieredTask: "Tiered Task Designer",
+        bloom: "Bloom's Taxonomy",
+        aiProof: "Create AI-Proof Assignments",
+        rubrics: "Rubrics Creator",
+        codeCreator: "Code Creator",
+        activeLearning: "Active Learning",
+        socialStoryteller: "Social Storyteller",
+        principalAdvisor: "AI Advisor for Principals",
+        aiEthics: "AI Ethics Advisor",
+        interactiveLecture: "Interactive Lecture",
+        studyBuddy: "Study Buddy",
+        studyPlanner: "Study Planner",
+        assessingPapers: "Assessing Papers",
+        handwrittenGrader: "Handwritten Exam Grader",
+        botASaurus: "BOT-A-SAURUS AGENT",
+        rolePlay: "ROLE PLAY Practice",
+        courseCreation: "Course Creation Assistant",
+        selfAssessment: "Self-Assessment Creator",
+        documentChecker: "Document Checker",
+        aiAgent: "Custom AI Agent"
+      }[app] || "Microsoft product";
+      return `<span class="product-icon" title="${title}" aria-label="${title}">${icons[app] || icons.m365}</span>`;
+    };
+    const agentIcon = (label, title = "Custom agent") => {
+      const palette = {
+        curriculum: ["#0078d4", "#41a5ee"],
+        compliance: ["#107c41", "#33c481"],
+        governance: ["#6264a7", "#7b83eb"],
+        family: ["#d24726", "#ed6c47"],
+        default: ["#b11f4b", "#e04674"]
+      };
+      const key = title.toLowerCase().includes("curriculum") ? "curriculum"
+        : title.toLowerCase().includes("compliance") ? "compliance"
+        : title.toLowerCase().includes("governance") ? "governance"
+        : title.toLowerCase().includes("family") ? "family"
+        : "default";
+      const [c1, c2] = palette[key];
+      const gid = `agrad${Math.random().toString(36).slice(2, 8)}`;
+      return `<span class="product-icon" title="${title}" aria-label="${title}">
+        <svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <defs><linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient></defs>
+          <path d="M20 8h24a8 8 0 0 1 8 8v10a10 10 0 0 1-10 10h-4v10l-10-10H20a8 8 0 0 1-8-8V16a8 8 0 0 1 8-8z" fill="url(#${gid})"/>
+          <circle cx="26" cy="24" r="3" fill="#fff"/>
+          <circle cx="38" cy="24" r="3" fill="#fff"/>
+          <text x="32" y="58" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="10" font-weight="800" fill="var(--cp-text-muted)">${label}</text>
+        </svg>
+      </span>`;
+    };
+    const iconFor = (name, category = "") => {
+      const nameKey = name.toLowerCase();
+      const key = `${name} ${category}`.toLowerCase();
+      // Declarative agents (rows 5-7) — match by name so they don't fall through
+      if (nameKey === "study guide") return productIcon("studyGuide");
+      if (nameKey === "mind mapper") return productIcon("mindMapper");
+      if (nameKey.includes("socratic")) return productIcon("socratic");
+      if (nameKey === "meeting mentor") return productIcon("meetingMentor");
+      if (nameKey.includes("meeting summary")) return productIcon("meetingSummary");
+      if (nameKey.includes("teaching advisor")) return productIcon("teachingAdvisor");
+      if (nameKey.includes("academic researcher")) return productIcon("academicResearcher");
+      if (nameKey.includes("tiered task")) return productIcon("tieredTask");
+      if (nameKey.includes("bloom")) return productIcon("bloom");
+      if (nameKey.includes("ai-proof") || nameKey.includes("ai proof")) return productIcon("aiProof");
+      if (nameKey.includes("rubrics")) return productIcon("rubrics");
+      if (nameKey === "code creator") return productIcon("codeCreator");
+      if (nameKey === "active learning") return productIcon("activeLearning");
+      if (nameKey.includes("social storyteller")) return productIcon("socialStoryteller");
+      if (nameKey.includes("advisor for principals")) return productIcon("principalAdvisor");
+      if (nameKey.includes("ai ethics")) return productIcon("aiEthics");
+      if (nameKey.includes("interactive lecture")) return productIcon("interactiveLecture");
+      if (nameKey === "study buddy") return productIcon("studyBuddy");
+      if (nameKey === "study planner" || nameKey.includes("study planner")) return productIcon("studyPlanner");
+      if (nameKey.includes("assessing papers")) return productIcon("assessingPapers");
+      if (nameKey.includes("handwritten")) return productIcon("handwrittenGrader");
+      if (nameKey.includes("bot-a-saurus") || nameKey.includes("bot a saurus")) return productIcon("botASaurus");
+      if (nameKey.includes("role play")) return productIcon("rolePlay");
+      if (nameKey.includes("course creation")) return productIcon("courseCreation");
+      if (nameKey.includes("self-assessment") || nameKey.includes("self assessment")) return productIcon("selfAssessment");
+      if (nameKey.includes("document checker")) return productIcon("documentChecker");
+      // Specific named agents
+      if (nameKey.includes("prompt coach")) return productIcon("promptCoach");
+      if (nameKey === "copilot chat" || nameKey.includes("m365 chat")) return productIcon("copilotRibbon");
+      if (nameKey.includes("idea coach")) return productIcon("ideaCoach");
+      if (nameKey.includes("writing coach")) return productIcon("writingCoach");
+      if (nameKey.includes("career coach")) return productIcon("careerCoach");
+      if (nameKey.includes("learning coach")) return productIcon("learningCoach");
+      if (nameKey.includes("employee self")) return productIcon("selfService");
+      if (nameKey.includes("knowledge agent") || nameKey.includes("knowledge")) return productIcon("knowledge");
+      if (nameKey.includes("legal")) return productIcon("legal");
+      if (nameKey.includes("frontline")) return productIcon("frontline");
+      if (nameKey.includes("sme finder")) return productIcon("sme");
+      if (nameKey.includes("app builder")) return productIcon("appBuilder");
+      if (nameKey.includes("plan my day")) return productIcon("planMyDay");
+      if (nameKey.includes("workforce")) return productIcon("workforce");
+      if (nameKey.includes("ai learning advisor")) return productIcon("student");
+      if (nameKey.includes("survey")) return productIcon("forms");
+      // Name-based education matches
+      if (nameKey.includes("teacher") || nameKey.includes("teach")) return productIcon("teacher");
+      if (nameKey.includes("study") || nameKey.includes("student") || nameKey.includes("learn")) return productIcon("student");
+      if (nameKey.includes("notebook") || nameKey.includes("onenote")) return productIcon("onenote");
+      if (nameKey.includes("curriculum")) return productIcon("curriculum");
+      if (nameKey.includes("education") || nameKey.includes("professional development") || nameKey.includes("scholarship")) return productIcon("education");
+      // Microsoft product matches
+      if (key.includes("loop")) return productIcon("loop");
+      if (key.includes("word")) return productIcon("word");
+      if (key.includes("excel") || key.includes("analyst") || key.includes("data ")) return productIcon("excel");
+      if (key.includes("powerpoint") || key.includes("presentation") || key.includes("visual creator")) return productIcon("powerpoint");
+      if (key.includes("outlook") || key.includes("email") || key.includes("mail")) return productIcon("outlook");
+      if (key.includes("teams") || key.includes("meeting") || key.includes("facilitator") || key.includes("interpreter")) return productIcon("teams");
+      if (key.includes("planner") || key.includes("project status") || key.includes("project")) return productIcon("planner");
+      if (key.includes("sharepoint") || key.includes("policy")) return productIcon("sharepoint");
+      if (key.includes("onedrive")) return productIcon("onedrive");
+      if (key.includes("workflow") || key.includes("flow") || key.includes("automate")) return productIcon("powerautomate");
+      if (key.includes("power bi") || key.includes("dashboard") || key.includes("district view") || key.includes("capacity")) return productIcon("powerbi");
+      if (key.includes("form")) return productIcon("forms");
+      if (key.includes("feedback") || key.includes("sentiment")) return productIcon("forms");
+      if (key.includes("researcher") || key.includes("research") || key.includes("library")) return productIcon("researcher");
+      if (key.includes("family") || key.includes("parent")) return productIcon("family");
+      if (key.includes("people") || key.includes("engagement")) return productIcon("people");
+      // Contextual (non-product) matches
+      if (key.includes("attendance")) return productIcon("attendance");
+      if (key.includes("wellbeing") || key.includes("care ")) return productIcon("wellbeing");
+      if (key.includes("event")) return productIcon("event");
+      if (key.includes("admissions") || key.includes("enrollment") || key.includes("yield")) return productIcon("admissions");
+      if (key.includes("operations") || key.includes("facilities") || key.includes("transport")) return productIcon("operations");
+      if (key.includes("overseer") || key.includes("oversight") || key.includes("watch") || key.includes("monitor")) return productIcon("overseer");
+      if (key.includes("copilot chat") || key.includes("m365 chat")) return productIcon("copilotRibbon");
+      if (key.includes("inspection") || key.includes("audit") || key.includes("compliance") || key.includes("readiness")) return agentIcon("\u2713", "Compliance agent");
+      if (key.includes("governance") || key.includes("security") || key.includes("privacy")) return agentIcon("G", "Governance agent");
+      if (key.includes("copilot") || key.includes("chat")) return productIcon("copilotRibbon");
+      return productIcon("robot");
+    };
+
+    const agents = [
+      {
+        n: 1, symbol: "Ta", name: "Teach Agent", period: 1, group: 1, category: "Copilot Chat", audience: "Teachers",
+        purpose: "Helps educators with content creation and planning.",
+        license: "Microsoft 365 A1 Education included agent.",
+        features: ["Lesson ideas generation", "Activity drafting", "Classroom content creation", "Prompt-based teaching assistance", "Teacher productivity support", "Safe education-focused AI assistance"],
+        useCases: ["Generate lesson plans", "Create differentiated worksheets", "Draft classroom activities", "Produce formative assessments", "Adapt content by grade level", "Generate parent communications"],
+        systems: "A1 education AI experience, web-grounded education assistance, teacher-owned classroom content.",
+        guardrails: "Teacher reviews all output before students see it; validate accuracy, age suitability, accessibility, and copyright.",
+        video: "https://www.youtube.com/watch?v=WkXVukl62KU"
+      },
+      {
+        n: 2, symbol: "Sl", name: "Study & Learn", period: 1, group: 18, category: "Copilot Chat", audience: "Students",
+        purpose: "Student-focused AI coach for study support and learning reinforcement.",
+        license: "Microsoft 365 A1 Education included student agent.",
+        features: ["Study explanations", "Practice questions", "Learning summaries", "Student-friendly tutoring prompts", "Understanding support", "Learning reinforcement", "Interactive flashcards", "Quizzes", "Matching activities", "Fill-in-the-blank exercises", "Student-owned content grounding", "Learning science-based coaching", "Assignment support", "Educator visibility scenarios", "Works with Teams for Education workflows"],
+        useCases: ["Explain a concept in simpler language", "Create practice questions", "Review notes before a quiz", "Generate flashcards", "Support assignment understanding", "Reinforce learning after class"],
+        systems: "Student-owned content, Teams for Education workflows, classroom materials available to the learner.",
+        guardrails: "Supports learning, not cheating; age-appropriate responses, academic integrity, and educator visibility where enabled.",
+        video: video("Microsoft Education Study and Learn agent flashcards quizzes")
+      },
+      {
+        n: 3, symbol: "Nt", name: "Notebook Teacher", period: 2, group: 1, category: "Copilot Chat", audience: "Teachers",
+        purpose: "Organizes teaching notebooks and turns notes into reusable planning material.",
+        license: "Microsoft 365 A1 Education included notebook experience.",
+        features: ["Teaching notebook organization", "Summaries of notes", "Class planning sections", "Reusable prompts and references"],
+        useCases: ["Summarize class planning notes", "Organize lesson ideas", "Track reusable prompts", "Prepare classroom reference sections"],
+        systems: "Teacher notebooks, class planning notes, references, Microsoft 365 education workspace.",
+        guardrails: "Protect sensitive student notes and maintain teacher review over generated planning content.",
+        video: "https://www.youtube.com/watch?v=Dcb7SFH5lnE"
+      },
+      {
+        n: 4, symbol: "Ns", name: "Notebook Student", period: 2, group: 2, category: "Copilot Chat", audience: "Students",
+        purpose: "Helps students organize notes, summarize learning, and reflect on assignments.",
+        license: "Microsoft 365 A1 Education included notebook experience.",
+        features: ["Student note organization", "Study summaries", "Assignment tracking prompts", "Learning reflection support"],
+        useCases: ["Organize study notes", "Summarize a lesson", "Track assignments", "Reflect on what was learned"],
+        systems: "Student notebooks, class notes, assignment references, Microsoft 365 education workspace.",
+        guardrails: "Student privacy, academic integrity, and teacher guidance for appropriate use.",
+        video: "https://www.youtube.com/watch?v=ZNLaLyjky-s"
+      },
+
+      { n: 5, symbol: "Lg", name: "Legal Agent", period: 4, group: 11, category: "M365 Agent", audience: "Legal, compliance, and admin teams", purpose: "Grounds work in legal templates, precedents, and organizational guidance.", license: "Microsoft 365 agent experience where enabled.", features: ["Legal drafting help", "Clause suggestions", "Policy alignment", "Risk-language review"], useCases: ["Vendor contract review", "Policy update", "Compliance response"], systems: "Approved legal repositories, SharePoint, Word.", guardrails: "Legal team must sign off; no auto-decisions.", video: "https://www.youtube.com/watch?v=aooMOVX5vys" },
+      { n: 6, symbol: "Lc", name: "Learning Coach", period: 4, group: 14, category: "M365 Agent", audience: "Learners, staff, and skilling teams", purpose: "Personal learning coach that recommends paths, quizzes, and skilling activities.", license: "Microsoft 365 agent experience where enabled.", features: ["Personalized learning path", "Skill assessment", "Practice quizzes", "Progress nudges"], useCases: ["AI skilling for teachers", "Onboarding path", "Compliance training"], systems: "Viva Learning, Microsoft 365 Copilot, LMS content where enabled.", guardrails: "No performance judgments without manager review.", video: "https://www.youtube.com/watch?v=9jBGNHl3GsI" },
+      { n: 7, symbol: "Ess", name: "Employee Self-Service Agent", period: 4, group: 15, category: "M365 Agent", audience: "All staff", purpose: "Automates common HR, IT, and policy questions so employees self-serve for benefits, leave, and onboarding.", license: "Microsoft 365 agent experience where enabled.", features: ["HR policy Q&A", "Leave and benefits guidance", "Onboarding steps", "Ticket handoff"], useCases: ["Leave request", "Benefits question", "IT help", "Onboarding checklist"], systems: "HR knowledge base, ITSM, SharePoint, Viva.", guardrails: "PII protection and human escalation for sensitive cases.", video: "https://www.youtube.com/watch?v=fCBnbBcQ72U" },
+      { n: 8, symbol: "Ou", name: "Outlook Responder", period: 4, group: 16, category: "Paid M365 Copilot", audience: "Teachers and staff", purpose: "Email drafting and summarization.", license: "Requires Microsoft 365 Copilot license.", features: ["Summarize email threads", "Draft replies", "Adjust tone", "Extract follow-ups"], useCases: ["Parent emails", "Vendor follow-up", "Internal updates", "Meeting recap emails"], systems: "Outlook mailbox and calendar.", guardrails: "Human approval before sending and privacy review.", video: video("Microsoft 365 Copilot in Outlook") },
+      { n: 9, symbol: "Tm", name: "Teams Agent", period: 4, group: 8, category: "Paid M365 Copilot", audience: "Staff and leadership", purpose: "In-Teams agent for meeting summaries, action items, and cross-Teams context.", license: "Requires Microsoft 365 Copilot license.", features: ["Meeting summaries", "Action items", "Decision capture", "Follow-up drafts"], useCases: ["Leadership meetings", "Teacher meetings", "Parent conferences", "Project calls"], systems: "Teams meetings, transcripts, chats, shared files.", guardrails: "Transcript consent and sensitive-topic handling.", video: "https://www.youtube.com/watch?v=V-5AVcwCh6o" },
+
+      { n: 11, symbol: "Ss", name: "Student Success", period: 3, group: 1, category: "MOEHE Priority", audience: "Counselors and school leaders", purpose: "Identify at-risk students, suggest interventions, generate advisor reports, and notify counselors.", license: "Custom Copilot Studio agent built from Study & Learn, Attendance Risk, and Wellbeing Watch.", features: ["Risk identification", "Intervention suggestions", "Advisor reports", "Counselor notifications"], useCases: ["Attendance concerns", "Low LMS engagement", "Grade decline", "Learning Accelerator intervention"], systems: "Attendance, grades, LMS engagement, Learning Accelerator data.", guardrails: "No automated student decisions; counselor review and safeguarding escalation.", video: video("Copilot Studio student success agent education") },
+      { n: 12, symbol: "Cr", name: "Curriculum Review", period: 3, group: 2, category: "MOEHE Priority", audience: "Curriculum teams", purpose: "Review curriculum alignment, generate lesson plans, map standards, detect gaps, and route approvals.", license: "Custom Copilot Studio agent built from Teacher Agent and Curriculum Flow.", features: ["Curriculum alignment", "Lesson plan generation", "Standards mapping", "Gap detection", "Approval routing"], useCases: ["Map standards", "Review lesson sequence", "Route curriculum changes", "Detect missing outcomes"], systems: "Curriculum repositories, standards documents, SharePoint, Teams approvals.", guardrails: "Curriculum owner approval and version control.", video: video("Copilot Studio curriculum agent education") },
+      { n: 13, symbol: "Pr", name: "Principal Copilot", period: 3, group: 13, category: "MOEHE Priority", audience: "School principals", purpose: "Weekly school health summary, teacher workload insights, attendance trends, academic performance trends, and action tracking.", license: "Custom Copilot Studio agent combining Excel Analyst, Teams Meeting Agent, and District View.", features: ["Weekly health summary", "Teacher workload insight", "Attendance trends", "Performance trends", "Action tracking"], useCases: ["Principal weekly brief", "School performance check", "Leadership action review", "Staff workload planning"], systems: "Excel, Teams, Power BI, SIS, action trackers.", guardrails: "Leadership review and data quality checks.", video: video("Microsoft Copilot school principal education agent") },
+      { n: 14, symbol: "Mk", name: "MOEHE Knowledge", period: 3, group: 14, category: "MOEHE Priority", audience: "Ministry staff and schools", purpose: "Answers ministry policy, circular, procedure, and form questions to reduce support calls.", license: "Custom Copilot Studio knowledge agent.", features: ["Policy Q&A", "Circular lookup", "Procedure explanation", "Form guidance", "AI usage standards lookup"], useCases: ["What is the policy for field trips?", "How do I request leave?", "Show latest grading guidelines", "What are the AI usage standards?"], systems: "SharePoint, policies, circulars, procedures, forms.", guardrails: "Cite official source and do not override policy owners.", video: video("Copilot Studio SharePoint knowledge agent") },
+      { n: 15, symbol: "Tp", name: "Teacher Productivity", period: 3, group: 15, category: "MOEHE Priority", audience: "Teachers", purpose: "Create lesson plans, worksheets, presentations, quizzes, and rubrics.", license: "Custom Copilot Studio agent combining Teacher Agent, Word Coach, and PowerPoint Builder.", features: ["Lesson plans", "Worksheets", "Presentations", "Quizzes", "Rubrics"], useCases: ["Weekly planning", "Differentiated resources", "Formative checks", "Class presentation packs"], systems: "Teacher content, Word, PowerPoint, SharePoint, curriculum resources.", guardrails: "Teacher review, grade-level adaptation, academic integrity.", video: video("Microsoft Education Copilot teacher productivity") },
+      { n: 16, symbol: "In", name: "Inspection Readiness", period: 3, group: 16, category: "MOEHE Priority", audience: "School quality and compliance teams", purpose: "Supports ADEK and ministry inspection readiness through evidence gathering, gap identification, and self-assessment reports.", license: "Custom Copilot Studio agent built from Inspection Sync, Audit Companion, and Compliance Overseer.", features: ["ADEK readiness", "Inspection readiness", "Evidence gathering", "Gap identification", "Self-assessment reports"], useCases: ["Prepare inspection pack", "Find missing evidence", "Generate self-assessment", "Track compliance gaps"], systems: "SharePoint evidence libraries, inspection frameworks, compliance registers.", guardrails: "Compliance officer approval and evidence traceability.", video: video("Copilot Studio compliance inspection readiness agent") },
+      { n: 17, symbol: "Fe", name: "Family Engagement", period: 3, group: 17, category: "MOEHE Priority", audience: "Parent engagement and communications", purpose: "Parent notifications, Arabic/English communication, parent feedback collection, event management, and FAQ support.", license: "Custom Copilot Studio agent built from Family Route, Event Orchestrator, and Outlook Responder.", features: ["Parent notifications", "Arabic/English communication", "Feedback collection", "Event management", "FAQ support"], useCases: ["Bilingual parent message", "Event announcement", "Feedback analysis", "Policy FAQ"], systems: "Outlook, Teams, Forms, event calendars, SharePoint FAQs.", guardrails: "Human send approval, translation review, student privacy.", video: video("Copilot Studio parent engagement education agent") },
+
+      { n: 19, symbol: "At", name: "Attendance Risk", period: 4, group: 1, category: "Copilot Studio", audience: "Student support", purpose: "Highlights attendance-risk patterns and recommends follow-up actions.", license: "Custom Copilot Studio agent.", features: ["Attendance trend analysis", "Risk flags", "Follow-up suggestions", "Counselor routing"], useCases: ["Chronic absence", "Advisor report", "Intervention planning"], systems: "SIS attendance, intervention history, calendar.", guardrails: "No punitive automation and counselor review.", video: video("Copilot Studio attendance risk education") },
+      { n: 20, symbol: "Ww", name: "Wellbeing Watch", period: 4, group: 2, category: "Copilot Studio", audience: "Counselors", purpose: "Monitors support patterns and escalates exceptions safely.", license: "Custom Copilot Studio agent.", features: ["Pattern monitoring", "Exception alerts", "Case trend review", "Escalation summary"], useCases: ["Safeguarding triage", "Counselor workload", "Wellbeing trend report"], systems: "Support cases, counselor inputs, attendance and wellbeing data.", guardrails: "No diagnosis; safeguarding policy governs escalation.", video: video("Copilot Studio wellbeing education agent") },
+      { n: 21, symbol: "Cf", name: "Curriculum Flow", period: 4, group: 13, category: "Copilot Studio", audience: "Academic operations", purpose: "Routes curriculum changes through review, approval, and publishing.", license: "Custom Copilot Studio + Power Automate.", features: ["Change request", "Reviewer routing", "Version tracking", "Publishing checklist"], useCases: ["New unit approval", "Standards update", "Curriculum publication"], systems: "SharePoint, Teams, Planner, curriculum repository.", guardrails: "Approval gates and rollback owner.", video: video("Copilot Studio approval workflow education") },
+      { n: 22, symbol: "Fr", name: "Family Route", period: 4, group: 14, category: "Copilot Studio", audience: "Family engagement teams", purpose: "Routes parent requests, feedback, and cases to the right school team.", license: "Custom Copilot Studio agent.", features: ["Request routing", "Feedback triage", "Case classification", "Response draft"], useCases: ["Parent complaint", "FAQ escalation", "Feedback follow-up"], systems: "Forms, Outlook, CRM, Teams.", guardrails: "Human response approval and privacy review.", video: video("Copilot Studio customer service agent education") },
+      { n: 23, symbol: "Ev", name: "Event Orchestrator", period: 4, group: 15, category: "Copilot Studio", audience: "School operations", purpose: "Coordinates events, sign-ups, announcements, and follow-up.", license: "Custom Copilot Studio agent.", features: ["Event plan", "Signup workflow", "Parent communication", "Post-event summary"], useCases: ["Parent night", "Training session", "School event"], systems: "Forms, Outlook, Teams, SharePoint, calendar.", guardrails: "Accessibility, consent, and send approval.", video: video("Copilot Studio event management agent") },
+
+      { n: 31, symbol: "Dv", name: "District View", period: 5, group: 1, category: "Copilot Studio", audience: "Ministry and district leaders", purpose: "Connects school-level status into district or ministry dashboards.", license: "Custom Copilot Studio decision-support agent.", features: ["School rollups", "Dashboard narrative", "Exception summary", "Leadership brief"], useCases: ["Weekly district review", "Ministry health dashboard", "School comparisons"], systems: "Power BI, SIS, finance, project systems.", guardrails: "Aggregation rules, data quality, executive review.", video: video("Copilot Studio Power BI education dashboard") },
+      { n: 32, symbol: "Au", name: "Audit Companion", period: 5, group: 2, category: "Copilot Studio", audience: "Audit and compliance", purpose: "Flags missing evidence, inconsistencies, and readiness risks.", license: "Custom Copilot Studio decision-support agent.", features: ["Evidence checklist", "Gap detection", "Readiness score", "Reviewer notes"], useCases: ["Inspection evidence", "Internal audit", "Policy review"], systems: "SharePoint, audit templates, Power BI exports.", guardrails: "Compliance officer review and evidence provenance.", video: video("Copilot Studio audit compliance agent") },
+      { n: 33, symbol: "Yi", name: "Yield Intelligence", period: 5, group: 13, category: "Copilot Studio", audience: "Admissions leaders", purpose: "Forecasts enrollment conversion and recommends engagement priorities.", license: "Custom Copilot Studio decision-support agent.", features: ["Funnel forecast", "Engagement priority", "Conversion summary", "Capacity insight"], useCases: ["Admissions forecast", "Waitlist planning", "School capacity"], systems: "Admissions CRM, events, email engagement, capacity plans.", guardrails: "Fairness review and human admissions decision.", video: video("Copilot Studio enrollment analytics agent") },
+
+      { n: 57, symbol: "Is", name: "Inspection Sync", period: 6, group: 3, category: "Copilot Studio", audience: "Inspection and ministry teams", purpose: "Connects school evidence, district reporting, and regulator submissions.", license: "Custom Copilot Studio cross-organization agent.", features: ["Evidence sync", "Submission pack", "Regulator checklist", "Status tracking"], useCases: ["Ministry inspection", "ADEK submission", "Evidence lock"], systems: "Compliance platform, SharePoint, regulator portal.", guardrails: "Submission approval and retention policy.", video: video("Copilot Studio inspection compliance education") },
+      { n: 58, symbol: "La", name: "Learning Accelerator", period: 6, group: 4, category: "Copilot Studio", audience: "Teaching and student success teams", purpose: "Connects learning-progress evidence into interventions and reports.", license: "Custom Copilot Studio cross-organization agent.", features: ["Learning progress insight", "Intervention mapping", "Teacher brief", "Student support handoff"], useCases: ["Reading progress", "Skill gap review", "Support plan"], systems: "Learning Accelerator data, LMS, Teams, SIS.", guardrails: "Teacher and counselor review; no automated labeling.", video: video("Microsoft Learning Accelerators education Copilot") },
+      { n: 59, symbol: "Ps", name: "Policy Sync", period: 6, group: 5, category: "Copilot Studio", audience: "Ministry policy teams", purpose: "Synchronizes policy updates, circulars, and school guidance across channels.", license: "Custom Copilot Studio cross-organization agent.", features: ["Policy update tracking", "Circular summarization", "School guidance", "Acknowledgement tracking"], useCases: ["New AI policy", "Field trip circular", "Assessment update"], systems: "SharePoint, Teams, Outlook, policy repository.", guardrails: "Policy owner approval and version history.", video: video("Copilot Studio SharePoint policy knowledge agent") },
+
+      { n: 89, symbol: "Oo", name: "Operations Overseer", period: 7, group: 3, category: "Copilot Studio", audience: "Operations leaders", purpose: "Monitors recurring operational exceptions and recommends fixes.", license: "Custom Copilot Studio oversight agent.", features: ["Exception monitoring", "Recurring issue detection", "SLA alerts", "Operational recommendations"], useCases: ["Facilities backlog", "Transport exceptions", "Support desk trends"], systems: "Facilities, service desk, finance, calendar.", guardrails: "Operational owner approval and change-control.", video: video("Copilot Studio operations agent") },
+      { n: 90, symbol: "Go", name: "Governance Overseer", period: 7, group: 4, category: "Copilot Studio", audience: "IT, security, and data governance", purpose: "Monitors policy exceptions, access drift, and compliance obligations.", license: "Custom Copilot Studio oversight agent.", features: ["Access drift monitoring", "Policy exception tracking", "Audit-ready summaries", "Escalation workflow"], useCases: ["AI usage governance", "Access review", "Security exception"], systems: "Entra, Purview, Defender, policy repositories.", guardrails: "Security board oversight, audit logging, emergency stop.", video: video("Microsoft Copilot Studio governance security") },
+      { n: 91, symbol: "Ao", name: "Admissions Overseer", period: 7, group: 5, category: "Copilot Studio", audience: "Admissions leadership", purpose: "Monitors funnel health, capacity exceptions, and process bottlenecks.", license: "Custom Copilot Studio oversight agent.", features: ["Capacity monitoring", "Bottleneck alerts", "Funnel health", "Exception review"], useCases: ["Admissions bottleneck", "Capacity risk", "Waitlist review"], systems: "Admissions CRM, SIS, finance, communications.", guardrails: "Human offer decision and fairness review.", video: video("Copilot Studio admissions agent") },
+      { n: 92, symbol: "Co", name: "Compliance Overseer", period: 7, group: 6, category: "Copilot Studio", audience: "Compliance officers", purpose: "Monitors reporting obligations, evidence gaps, and recurring exceptions.", license: "Custom Copilot Studio oversight agent.", features: ["Obligation tracking", "Evidence gap alerts", "Exception monitoring", "Audit trail"], useCases: ["Compliance dashboard", "Inspection tracking", "Evidence aging"], systems: "Compliance registers, SharePoint, Power BI, regulator templates.", guardrails: "Compliance sign-off, evidence traceability, immutable logs.", video: video("Copilot Studio compliance governance agent") },
+      { n: 93, symbol: "Qg", name: "Qatar Grants", period: 3, group: 3, category: "MOEHE Priority", audience: "Ministry program owners", purpose: "Helps identify grant, funding, and implementation support opportunities for education transformation programs.", license: "Custom Copilot Studio knowledge and workflow agent.", features: ["Funding opportunity lookup", "Eligibility checklist", "Proposal draft support", "Approval package preparation"], useCases: ["MCI/ECIF style funding prep", "Partner funding request", "Transformation program justification"], systems: "SharePoint, funding guidelines, partner plans, opportunity records.", guardrails: "Finance and program owner approval before sharing or submitting.", video: video("Copilot Studio grants funding agent education") },
+      { n: 94, symbol: "Ar", name: "Arabic Translator", period: 3, group: 4, category: "MOEHE Priority", audience: "Teachers, ministry staff, parent engagement teams", purpose: "Creates Arabic/English drafts for school and ministry communications with tone and terminology consistency.", license: "Custom Copilot Studio agent with approved glossary and review workflow.", features: ["Arabic/English drafting", "Terminology glossary", "Tone adaptation", "Review routing"], useCases: ["Parent notices", "Policy summaries", "Workshop invites", "Bilingual FAQs"], systems: "Approved glossary, SharePoint templates, Outlook drafts, Teams approvals.", guardrails: "Human translation review for official communications.", video: video("Microsoft Copilot Arabic translation education") },
+      { n: 95, symbol: "Pd", name: "Professional Development", period: 3, group: 5, category: "MOEHE Priority", audience: "Teacher training and skilling teams", purpose: "Recommends professional learning paths and tracks teacher AI skilling progress.", license: "Custom Copilot Studio agent grounded in training catalogs and completion data.", features: ["Training pathway recommendation", "Completion tracking", "Skill-gap summary", "Workshop planning"], useCases: ["AI skilling rollout", "Teacher PD plan", "Certificate tracking", "Workshop follow-up"], systems: "Learning platforms, Teams, SharePoint, credential reports.", guardrails: "No performance judgment without manager/HR review.", video: video("Microsoft Education AI professional development teachers") },
+      { n: 96, symbol: "Ps", name: "Parent Sentiment", period: 5, group: 3, category: "MOEHE Priority", audience: "Family engagement and leadership", purpose: "Summarizes parent feedback themes and flags recurring issues needing school or ministry action.", license: "Custom Copilot Studio decision-support agent.", features: ["Feedback clustering", "Sentiment trends", "Issue prioritization", "Response recommendations"], useCases: ["Parent survey review", "Complaint trend analysis", "Communication planning"], systems: "Forms, Customer Voice, Outlook, Teams, CRM.", guardrails: "Avoid automated decisions; anonymize feedback where appropriate.", video: video("Copilot Studio sentiment analysis parent feedback education") },
+      { n: 97, symbol: "Fs", name: "Fee Support", period: 4, group: 3, category: "Copilot Studio", audience: "Finance and admissions teams", purpose: "Answers fee, invoice, discount, scholarship, and payment workflow questions.", license: "Custom Copilot Studio agent connected to finance policies and approval workflows.", features: ["Fee FAQ", "Payment status guidance", "Scholarship checklist", "Escalation routing"], useCases: ["Parent fee question", "Scholarship eligibility checklist", "Finance handoff"], systems: "Finance policy, ERP/CRM summaries, forms, Outlook.", guardrails: "No final financial commitment without finance approval.", video: video("Copilot Studio finance agent education") },
+      { n: 98, symbol: "Hr", name: "HR Leave Agent", period: 4, group: 4, category: "Copilot Studio", audience: "Ministry and school staff", purpose: "Guides employees through leave, travel, HR policies, and required forms.", license: "Custom Copilot Studio workflow agent.", features: ["Leave policy Q&A", "Form guidance", "Manager approval routing", "Status update"], useCases: ["How do I request leave?", "What documents are required?", "Route approval to manager"], systems: "HR policies, SharePoint forms, approvals, Outlook.", guardrails: "HR policy owner review and privacy protection.", video: video("Copilot Studio HR leave request agent") },
+      { n: 99, symbol: "Lb", name: "Library Research", period: 3, group: 6, category: "Copilot Studio", audience: "Students, librarians, teachers", purpose: "Helps users find approved research resources, summarize sources, and build citation-ready study paths.", license: "Custom Copilot Studio knowledge agent.", features: ["Research guide", "Source summary", "Citation prompts", "Reading pathway"], useCases: ["Research project", "Source comparison", "Library resource discovery"], systems: "Library catalog, approved databases, SharePoint resource lists.", guardrails: "Cite sources and avoid writing final student submissions.", video: video("Copilot Studio library research agent education") },
+      { n: 100, symbol: "Sa", name: "Scholarship Advisor", period: 5, group: 4, category: "Copilot Studio", audience: "Counselors and students", purpose: "Matches students to scholarship requirements and prepares application checklists.", license: "Custom Copilot Studio decision-support agent.", features: ["Eligibility matching", "Document checklist", "Deadline tracking", "Essay prompt support"], useCases: ["Scholarship shortlist", "Application plan", "Counselor briefing"], systems: "Scholarship database, student profile data, calendars, document library.", guardrails: "Counselor review and fairness controls.", video: video("Copilot Studio scholarship advisor agent") },
+      { n: 101, symbol: "Se", name: "Special Education Plan", period: 4, group: 5, category: "MOEHE Priority", audience: "SEN coordinators and teachers", purpose: "Helps draft support-plan evidence, accommodations, and follow-up actions for SEN teams.", license: "Custom Copilot Studio workflow agent.", features: ["Accommodation suggestions", "Support-plan draft", "Evidence collection", "Review routing"], useCases: ["IEP-style planning", "Learning support summary", "Teacher accommodation brief"], systems: "SEN records, teacher notes, approved intervention frameworks.", guardrails: "Specialist review required; no diagnosis or automated placement.", video: video("Copilot Studio special education support plan agent") },
+      { n: 102, symbol: "Tr", name: "Transport Route", period: 4, group: 6, category: "Copilot Studio", audience: "Operations and transport teams", purpose: "Coordinates student transport requests, route issues, and parent updates.", license: "Custom Copilot Studio workflow agent.", features: ["Transport request intake", "Route issue triage", "Parent notification draft", "Vendor handoff"], useCases: ["Bus route change", "Late bus alert", "Transport eligibility question"], systems: "Transport system, parent contacts, Outlook, Teams.", guardrails: "Location privacy and human approval before parent communication.", video: video("Copilot Studio transportation workflow agent school") },
+      { n: 103, symbol: "Ms", name: "Marketplace Partner", period: 6, group: 6, category: "Copilot Studio", audience: "Ministry partner and procurement teams", purpose: "Shortlists education partners, maps capabilities, and prepares partner engagement briefs.", license: "Custom Copilot Studio cross-organization agent.", features: ["Partner matching", "Capability mapping", "Brief generation", "Engagement tracker"], useCases: ["Find partner for LMS", "Compare implementation offers", "Prepare partner intro"], systems: "Partner lists, procurement docs, MSX notes, SharePoint.", guardrails: "Procurement and conflict-of-interest review.", video: video("Copilot Studio partner management agent") },
+      { n: 104, symbol: "Dp", name: "Data Privacy Coach", period: 6, group: 7, category: "MOEHE Priority", audience: "IT, governance, school leaders", purpose: "Guides teams through data privacy requirements for AI, student records, and external sharing.", license: "Custom Copilot Studio knowledge and policy agent.", features: ["Privacy Q&A", "Data-sharing checklist", "Risk prompts", "Approval routing"], useCases: ["Can we share this data?", "AI app privacy review", "Student data checklist"], systems: "Privacy policies, Purview guidance, approval workflows, data catalog.", guardrails: "Privacy officer sign-off and source citations.", video: video("Microsoft Purview Copilot Studio data privacy education") },
+      { n: 105, symbol: "Ma", name: "Math Practice Coach", period: 3, group: 7, category: "Copilot Studio", audience: "Students and teachers", purpose: "Creates scaffolded math practice, hints, and formative checks aligned to teacher-selected topics.", license: "Custom Copilot Studio learning agent.", features: ["Step-by-step hints", "Practice generation", "Misconception detection", "Teacher summary"], useCases: ["Algebra practice", "Exam prep", "Homework support", "Formative checks"], systems: "Curriculum standards, teacher-selected content, student-owned work.", guardrails: "Learning support only; no answer-only cheating mode.", video: video("Microsoft Education math practice AI tutor") },
+      { n: 106, symbol: "Rd", name: "Reading Fluency", period: 3, group: 8, category: "Copilot Studio", audience: "Students, teachers, SEN teams", purpose: "Supports reading fluency practice, comprehension checks, and teacher follow-up notes.", license: "Custom Copilot Studio learning agent connected to literacy tools.", features: ["Reading practice", "Comprehension questions", "Vocabulary support", "Teacher summary"], useCases: ["Reading intervention", "ELL support", "Homework reading practice"], systems: "Reading Progress/Learning Accelerator data, class texts, teacher notes.", guardrails: "Teacher review and accessibility/accommodation alignment.", video: video("Microsoft Reading Progress Learning Accelerators") },
+      { n: 107, symbol: "Ai", name: "AI Usage Coach", period: 6, group: 8, category: "MOEHE Priority", audience: "Teachers, students, school leaders", purpose: "Explains approved AI usage standards and guides safe prompt and citation practices.", license: "Custom Copilot Studio governance and adoption agent.", features: ["AI policy Q&A", "Prompt coaching", "Citation guidance", "Allowed-use examples"], useCases: ["Student AI guidance", "Teacher prompt training", "Policy rollout"], systems: "AI usage standards, academic integrity policy, training content.", guardrails: "Official policy citations and age-appropriate guidance.", video: video("Microsoft Education responsible AI classroom guidance") },
+      { n: 108, symbol: "Cp", name: "Capacity Planning", period: 5, group: 5, category: "Copilot Studio", audience: "Ministry planners and operations", purpose: "Forecasts school capacity, staffing needs, facility pressure, and enrollment scenarios.", license: "Custom Copilot Studio decision-support agent.", features: ["Capacity forecast", "Scenario planning", "Risk heatmap", "Leadership briefing"], useCases: ["New school planning", "Class size pressure", "Staffing projection"], systems: "Enrollment, facilities, HR, finance, Power BI.", guardrails: "Planner validation and transparent assumptions.", video: video("Copilot Studio capacity planning agent education") }
+    ];
+
+    const personaCards = [
+      {
+        persona: "Student",
+        iconKey: "student",
+        summary: "Learn faster, practice smarter, and stay on track.",
+        agents: [
+          { name: "Study & Learn", why: "Personal study coach for any topic." },
+          { name: "Notebook Student", why: "Organize notes and reflect on learning." },
+          { name: "Study Buddy", why: "Friendly on-demand quizzing and explanations." },
+          { name: "Study Guide", why: "Personalized web-grounded study guide." },
+          { name: "Study Planner", why: "Build a plan for any exam or topic." },
+          { name: "Mind Mapper", why: "Turn topics into a visual mind map." },
+          { name: "Socratic Thinking Agent", why: "Learn by guided questioning." },
+          { name: "Career Coach", why: "Explore pathways and interview prep." }
+        ]
+      },
+      {
+        persona: "Teacher",
+        iconKey: "teacher",
+        summary: "Plan, differentiate, and give feedback with less admin.",
+        agents: [
+          { name: "Teach Agent", why: "Lesson ideas and classroom content." },
+          { name: "Prompt Coach", why: "Write stronger prompts for the class." },
+          { name: "Notebook Teacher", why: "Reusable planning and references." },
+          { name: "Word Agent", why: "Draft handouts, letters, and rubrics." },
+          { name: "PowerPoint Agent", why: "Build class decks fast." },
+          { name: "Idea Coach", why: "Brainstorm lesson concepts." },
+          { name: "Writing Coach", why: "Improve student feedback and drafts." },
+          { name: "Bloom's Taxonomy", why: "Map tasks to cognitive levels." },
+          { name: "Rubrics Creator", why: "Fair, aligned rubrics on demand." },
+          { name: "Tiered Task Designer", why: "Differentiate for mixed-ability classes." },
+          { name: "Interactive Lecture", why: "Add polls and checks for understanding." },
+          { name: "Assessing Papers", why: "Rubric-guided assessment support." }
+        ]
+      },
+      {
+        persona: "School Principal",
+        iconKey: "sharepoint",
+        summary: "Weekly school health, meetings, and staff coordination.",
+        agents: [
+          { name: "Teams Agent", why: "Meeting summaries and follow-ups." },
+          { name: "Facilitator Agent", why: "Agendas, decisions, and actions." },
+          { name: "Excel Agent", why: "Attendance and performance trends." },
+          { name: "Planner Agent", why: "Track school initiatives and owners." },
+          { name: "SharePoint Agent", why: "Policy and handbook Q&A." },
+          { name: "AI Advisor for Principals", why: "Guidance on AI adoption and policy." },
+          { name: "Enrollment & Retention Insights Agent", why: "Track admissions funnel and retention risk." }
+        ]
+      },
+      {
+        persona: "Ministry / District Leader",
+        iconKey: "sme",
+        summary: "Cross-school insights, policy, and program governance.",
+        agents: [
+          { name: "SharePoint Agent", why: "Ministry policy, circular, and procedure Q&A." },
+          { name: "Knowledge Agent", why: "Synthesize answers from approved content." },
+          { name: "Analyst", why: "Explain trends across schools and cohorts." },
+          { name: "Researcher", why: "Sourced summaries for briefings." },
+          { name: "Enrollment & Retention Insights Agent", why: "System-wide funnel and retention view." },
+          { name: "Legal Agent", why: "Contract, policy, and compliance review." },
+          { name: "Employee Self-Service Agent", why: "Reduce ministry support-desk load." }
+        ]
+      },
+      {
+        persona: "Curriculum Lead",
+        iconKey: "curriculum",
+        summary: "Design, align, and refresh curriculum.",
+        agents: [
+          { name: "Teach Agent", why: "Draft units and activities." },
+          { name: "Course Creation Assistant", why: "Structure objectives, modules, and assessments." },
+          { name: "Academic Researcher", why: "Evidence-based content sourcing." },
+          { name: "Create AI-Proof Assignments", why: "Redesign for authentic student work." },
+          { name: "Teaching Advisor", why: "Best practices for teaching any topic." },
+          { name: "Active Learning", why: "Activity ideas to boost engagement." }
+        ]
+      },
+      {
+        persona: "Student Support / Counselor",
+        iconKey: "wellbeing",
+        summary: "Spot risks early and coordinate care.",
+        agents: [
+          { name: "Enrollment & Retention Insights Agent", why: "At-risk cohorts and retention signals." },
+          { name: "Social Storyteller", why: "Support students with social communication needs." },
+          { name: "Meeting Mentor", why: "Coach students and staff for meetings." },
+          { name: "AI Ethics Advisor", why: "Discuss ethics scenarios with learners." }
+        ]
+      },
+      {
+        persona: "Admissions & Enrollment",
+        iconKey: "admissions",
+        summary: "Manage funnel, capacity, and family communication.",
+        agents: [
+          { name: "Enrollment & Retention Insights Agent", why: "Funnel forecast and priorities." },
+          { name: "Survey Agent", why: "Capture family feedback." },
+          { name: "SharePoint Agent", why: "Answer admissions FAQs." },
+          { name: "Interpreter Agent", why: "Bilingual family communication." },
+          { name: "Outlook Responder", why: "Personalized email responses at scale." }
+        ]
+      },
+      {
+        persona: "IT / Digital Lead",
+        iconKey: "governance",
+        summary: "Governance, security, and scaling adoption safely.",
+        agents: [
+          { name: "SharePoint Agent", why: "Ground assistants on approved content." },
+          { name: "Workflows Agent", why: "Automate approvals and reminders." },
+          { name: "App Builder", why: "Turn ideas into apps quickly." },
+          { name: "SharePoint List Agent", why: "Turn chat context into structured lists." },
+          { name: "Knowledge Agent", why: "Centralize institutional knowledge." }
+        ]
+      },
+      {
+        persona: "HR / Staff Development",
+        iconKey: "people",
+        summary: "Skilling, self-service, and staff experience.",
+        agents: [
+          { name: "Employee Self-Service Agent", why: "HR, leave, and onboarding self-service." },
+          { name: "Learning Coach", why: "Personalized skilling paths." },
+          { name: "Career Coach", why: "Career growth and interview prep." },
+          { name: "Facilitator Agent", why: "Better staff meetings." },
+          { name: "Meeting Summary & Follow-up", why: "Capture decisions and actions." }
+        ]
+      },
+      {
+        persona: "Student Affairs",
+        iconKey: "family",
+        summary: "Support enrollment, wellbeing, and student services.",
+        agents: [
+          { name: "Enrollment & Retention Insights Agent", why: "Track admissions funnel and retention risk." },
+          { name: "Interpreter Agent", why: "Multilingual updates for students and families." },
+          { name: "SharePoint Agent", why: "Self-serve on student policies and FAQs." },
+          { name: "Survey Agent", why: "Capture student and family feedback." },
+          { name: "Employee Self-Service Agent", why: "Handle HR-style requests and forms." }
+        ]
+      }
+    ];
+
+    const ptable = document.getElementById("ptable");
+    const search = document.getElementById("search");
+    const empty = document.getElementById("empty");
+    const dialog = document.getElementById("dialog");
+    const close = document.getElementById("close");
+    let activeFilter = "all";
+
+    function addAgent(agent) {
+      if (!agents.some((item) => item.name === agent.name)) {
+        agents.push(agent);
+      }
+    }
+
+    // Layout overrides to match a real periodic-table shape.
+    // Row 3 (period 3): 4 M365 agents at groups 1, 2, 17, 18
+    // Row 4 (period 4): remaining M365 agents at groups 1-15
+    const layoutOverride = {
+      // Repurposed / renamed Paid M365 duplicates → new agents in Row 4
+      5:  { period: 4, group: 11 }, // Legal Agent
+      6:  { period: 4, group: 14 }, // Learning Coach
+      7:  { period: 4, group: 15 }, // Employee Self-Service Agent
+      8:  { period: 4, group: 16 }, // Outlook Responder
+      9:  { period: 4, group: 8 },  // Teams Agent
+      // Row 3 M365 anchors
+      26: { period: 3, group: 1 },  // Researcher
+      27: { period: 3, group: 2 },  // Analyst
+      28: { period: 3, group: 17 }, // Knowledge Agent (was People Agent)
+      29: { period: 4, group: 4 },  // Visual Creator
+      43: { period: 3, group: 18 }, // SharePoint Agent
+      // Row 4 M365 body
+      30: { period: 4, group: 12 }, // Workflows Agent
+      34: { period: 4, group: 1 },  // Word Agent
+      35: { period: 4, group: 2 },  // Excel Agent
+      36: { period: 4, group: 3 },  // PowerPoint Agent
+      37: { period: 4, group: 10 }, // Planner Agent
+      38: { period: 4, group: 6 },  // Facilitator Agent
+      39: { period: 4, group: 7 },  // Interpreter Agent
+      44: { period: 4, group: 5 },  // Survey Agent (was Forms)
+      50: { period: 4, group: 13 }, // App Builder
+      56: { period: 4, group: 9 },  // SharePoint List Agent
+      // Hidden extras (retained data, moved offscreen)
+      42: { period: 99, group: 6 },  // Project Status Agent
+      45: { period: 99, group: 9 },  // Loop Agent
+      46: { period: 99, group: 10 }, // Planner Task Agent
+      47: { period: 99, group: 11 }, // AI Learning Advisor
+      49: { period: 99, group: 16 }, // Plan My Day
+      51: { period: 99, group: 17 }, // Workforce Insights
+      55: { period: 99, group: 14 }  // Frontline Agent
+    };
+
+    agents.forEach((agent) => {
+      if (agent.category === "A1 Included") {
+        agent.category = "Copilot Chat";
+        agent.license = "Copilot Chat / Microsoft 365 education experience.";
+      }
+      if (agent.category === "Paid M365 Copilot") {
+        agent.category = "M365 Agent";
+        agent.license = "Microsoft 365 agent experience where enabled for the tenant.";
+      }
+      if (agent.category === "MOEHE Priority") {
+        agent.category = "Copilot Studio";
+      }
+      if (agent.category === "Copilot Studio" && agent.period < 5) {
+        agent.period = agent.period + 2;
+      }
+      // Hide non-declarative Copilot Studio agents (rows 5-7 are now for Declarative Agents only)
+      if (agent.category === "Copilot Studio" && !agent.declarative) {
+        agent.period = 99;
+      }
+      const override = layoutOverride[agent.n];
+      if (override) {
+        if (override.period !== undefined) agent.period = override.period;
+        if (override.group !== undefined) agent.group = override.group;
+      }
+    });
+
+    // 26 Declarative Agents (Web-Grounded) — placed in Rows 5, 6, and 7
+    // Each links to its OneNote page in the shared notebook
+    [
+      { n: 200, symbol: "Sg",  name: "Study Guide",                 period: 5, group: 1,  audience: "Students and teachers", purpose: "Creates a personalized study guide on any topic using web-grounded content.", features: ["Topic-based study guide", "Key concepts", "Practice questions", "Recommended reading"], useCases: ["Exam prep", "Course review", "Lesson recap"], guardrails: "Encourage learning; discourage answer copying.", page: "Study guide" },
+      { n: 201, symbol: "Mm",  name: "Mind Mapper",                 period: 5, group: 2,  audience: "Students and teachers", purpose: "Turns any topic into a structured mind map for brainstorming and revision.", features: ["Concept mapping", "Branch generation", "Visual outline", "Hierarchy suggestions"], useCases: ["Brainstorm", "Lesson planning", "Revision aid"], guardrails: "Human refines final structure.", page: "Mind Mapper" },
+      { n: 202, symbol: "St",  name: "Socratic Thinking Agent",     period: 5, group: 3,  audience: "Students and teachers", purpose: "Guides learners through Socratic questioning instead of giving direct answers.", features: ["Guided questioning", "Concept probing", "Reasoning prompts", "Reflection questions"], useCases: ["Deep discussion", "Critical thinking", "Ethics class"], guardrails: "Age-appropriate questioning.", page: "Socratic Thinking agent" },
+      { n: 203, symbol: "Mn",  name: "Meeting Mentor",              period: 5, group: 4,  audience: "Staff and leaders",    purpose: "Coaches meeting participants on preparation, participation, and follow-up.", features: ["Prep tips", "Discussion coaching", "Meeting etiquette", "Follow-up prompts"], useCases: ["Leader coaching", "New-manager support"], guardrails: "General guidance only.", page: "Meeting mentor" },
+      { n: 204, symbol: "Ms",  name: "Meeting Summary & Follow-up", period: 5, group: 5,  audience: "Staff and leaders",    purpose: "Produces meeting summaries and drafts follow-up action items.", features: ["Meeting recap", "Action items", "Owner suggestions", "Follow-up drafts"], useCases: ["Leadership sync", "Project standup"], guardrails: "Owner confirms actions before sending.", page: "Meeting Summary and Follow-up" },
+      { n: 205, symbol: "Ta",  name: "Teaching Advisor",            period: 5, group: 6,  audience: "Teachers",             purpose: "Advises on how to teach any topic with evidence-based strategies.", features: ["Pedagogy guidance", "Activity ideas", "Assessment suggestions", "Differentiation tips"], useCases: ["Lesson design", "New topic prep"], guardrails: "Teacher validates approach.", page: "Teaching Advisor (any topic)" },
+      { n: 206, symbol: "Ar",  name: "Academic Researcher",         period: 5, group: 7,  audience: "Students and teachers", purpose: "Assists with academic research: sources, citations, and literature synthesis.", features: ["Source discovery", "Citation help", "Literature summary", "Argument outlining"], useCases: ["Research paper", "Literature review"], guardrails: "Uphold academic integrity and citations.", page: "Academic researcher" },
+      { n: 207, symbol: "Tt",  name: "Tiered Task Designer",        period: 5, group: 8,  audience: "Teachers",             purpose: "Designs tiered tasks for different learner levels on the same topic.", features: ["Tiered activities", "Scaffolded prompts", "Differentiation", "Extension tasks"], useCases: ["Mixed-ability class", "Differentiation planning"], guardrails: "Teacher selects final tier assignments.", page: "Tiered Task Designer" },
+      { n: 208, symbol: "Bt",  name: "Bloom's Taxonomy",            period: 5, group: 9,  audience: "Teachers",             purpose: "Maps learning outcomes and questions to Bloom's taxonomy levels.", features: ["Level classification", "Question generation", "Outcome alignment", "Higher-order prompts"], useCases: ["Assessment design", "Rubric development"], guardrails: "Teacher validates alignment.", page: "Bloom's taxonomy" },
+      { n: 209, symbol: "Aip", name: "Create AI-Proof Assignments", period: 6, group: 1,  audience: "Teachers",             purpose: "Helps design assignments that promote authentic student work in an AI-rich era.", features: ["Assignment redesign", "Authenticity checks", "Process-based tasks", "Reflection prompts"], useCases: ["Course redesign", "Assessment update"], guardrails: "Academic-integrity focused; teacher final call.", page: "Create AI-proof assignments" },
+      { n: 210, symbol: "Rc",  name: "Rubrics Creator",             period: 6, group: 2,  audience: "Teachers",             purpose: "Creates detailed rubrics tailored to assignment goals and grade levels.", features: ["Criteria generation", "Level descriptors", "Weighting suggestions", "Alignment to outcomes"], useCases: ["Project rubric", "Presentation rubric"], guardrails: "Teacher validates fairness.", page: "Rubrics creator" },
+      { n: 211, symbol: "Cc",  name: "Code Creator",                period: 6, group: 3,  audience: "Students and teachers", purpose: "Generates, explains, and reviews code snippets for classroom scenarios.", features: ["Code generation", "Explanation", "Debug help", "Language variants"], useCases: ["Programming class", "STEM project"], guardrails: "Encourage learning, not copy-paste.", page: "Code creator" },
+      { n: 212, symbol: "Al",  name: "Active Learning",             period: 6, group: 4,  audience: "Teachers",             purpose: "Suggests active-learning activities and techniques for any topic.", features: ["Active techniques", "Group activity ideas", "Discussion prompts", "Reflection tools"], useCases: ["Lecture redesign", "Workshop plan"], guardrails: "Teacher adapts to context.", page: "Active Learning" },
+      { n: 213, symbol: "So",  name: "Social Storyteller",          period: 6, group: 5,  audience: "SEN teams and teachers", purpose: "Creates social stories for students with social communication needs.", features: ["Social story drafting", "Visual sequencing", "Language leveling", "Scenario suggestions"], useCases: ["Behavior support", "Classroom transitions"], guardrails: "SEN specialist review recommended.", page: "Social Storyteller" },
+      { n: 214, symbol: "Ap",  name: "AI Advisor for Principals",   period: 6, group: 6,  audience: "Principals and school leaders", purpose: "Advises principals on AI adoption, policy, and community communication.", features: ["Adoption planning", "Policy drafting", "Community messaging", "Risk considerations"], useCases: ["AI policy", "Parent briefing", "Board update"], guardrails: "Reference official guidance.", page: "AI advisor for Principals" },
+      { n: 215, symbol: "Ae",  name: "AI Ethics Advisor",           period: 6, group: 7,  audience: "Teachers, students, leaders", purpose: "Explains AI ethics concepts and helps evaluate scenarios.", features: ["Ethics framework guidance", "Scenario analysis", "Bias discussion", "Responsible-use tips"], useCases: ["AI ethics class", "Policy review"], guardrails: "Cite reputable frameworks.", page: "AI Ethics Advisor" },
+      { n: 216, symbol: "Il",  name: "Interactive Lecture",         period: 6, group: 8,  audience: "Teachers",             purpose: "Designs interactive lecture segments with prompts, polls, and checks for understanding.", features: ["Lecture segmentation", "Interaction prompts", "Poll suggestions", "Comprehension checks"], useCases: ["Class prep", "Workshop design"], guardrails: "Teacher adapts to audience.", page: "Interactive Lecture" },
+      { n: 217, symbol: "Sb",  name: "Study Buddy",                 period: 6, group: 9,  audience: "Students",             purpose: "A friendly study buddy that quizzes, encourages, and explains topics on demand.", features: ["Personalized quizzing", "Explanations", "Practice questions", "Motivational nudges"], useCases: ["Solo study", "Homework support"], guardrails: "Learning support only, not answer-copy.", page: "Study Buddy" },
+      { n: 218, symbol: "Sp",  name: "Study Planner",               period: 7, group: 1,  audience: "Students",             purpose: "Creates a personalized study plan for any topic using web-grounded sources.", features: ["Study schedule", "Milestone tracking", "Topic breakdown", "Review reminders"], useCases: ["Exam prep plan", "Course pacing"], guardrails: "Learner tailors to their schedule.", page: "Study planner (any web)" },
+      { n: 219, symbol: "As",  name: "Assessing Papers",            period: 7, group: 2,  audience: "Teachers",             purpose: "Helps teachers assess written papers with rubric-guided feedback.", features: ["Rubric-based scoring", "Comment suggestions", "Bias check", "Improvement tips"], useCases: ["Essay grading", "Report assessment"], guardrails: "Teacher signs off on final grades.", page: "Assessing Papers" },
+      { n: 220, symbol: "He",  name: "Handwritten Exam Grader",     period: 7, group: 3,  audience: "Teachers",             purpose: "Assists with grading handwritten exams from scanned images.", features: ["Handwriting interpretation", "Rubric scoring", "Feedback drafting", "Score summary"], useCases: ["Handwritten exam", "Quiz grading"], guardrails: "Human verification of transcription.", page: "Handwritten Exam Grader" },
+      { n: 221, symbol: "Bs",  name: "BOT-A-SAURUS AGENT",          period: 7, group: 4,  audience: "Students and teachers", purpose: "Fun, playful agent that turns any topic into an engaging dinosaur-themed learning journey.", features: ["Engaging narration", "Age-appropriate framing", "Interactive prompts", "Fun facts"], useCases: ["Primary engagement", "Story-based lesson"], guardrails: "Age-appropriate content.", page: "BOT-A-SAURUS - AGENT" },
+      { n: 222, symbol: "Rp",  name: "ROLE PLAY Practice",          period: 7, group: 5,  audience: "Students and teachers", purpose: "Facilitates role-play practice for negotiation, interviews, and communication scenarios.", features: ["Scenario design", "Character prompts", "Feedback rubric", "Reflection questions"], useCases: ["Interview practice", "Negotiation training"], guardrails: "Ethical role-play only.", page: "ROLE PLAY Practice negotiation" },
+      { n: 223, symbol: "Cca", name: "Course Creation Assistant",   period: 7, group: 6,  audience: "Teachers",             purpose: "Helps design and structure a full course from objectives to modules to assessments.", features: ["Learning outcomes", "Module structure", "Assessment plan", "Resource suggestions"], useCases: ["New course", "Course redesign"], guardrails: "Curriculum owner validates alignment.", page: "Course Creation Assistant" },
+      { n: 224, symbol: "Sac", name: "Self-Assessment Creator",     period: 7, group: 7,  audience: "Students and teachers", purpose: "Creates self-assessment quizzes and reflection tools for any topic.", features: ["Self-check questions", "Rubrics", "Reflection prompts", "Score interpretation"], useCases: ["Learner self-check", "Formative assessment"], guardrails: "Encourage honest reflection.", page: "Self-assessment creator" },
+      { n: 225, symbol: "Dc",  name: "Document Checker",            period: 7, group: 8,  audience: "Teachers and staff",   purpose: "Checks documents against grammar, tone, style, and structural guidelines.", features: ["Grammar checks", "Style guidance", "Structure review", "Consistency checks"], useCases: ["Draft review", "Policy document check"], guardrails: "Author retains voice; final call.", page: "Document Checker" }
+    ].forEach((decl) => {
+      agents.push({
+        n: decl.n,
+        symbol: decl.symbol,
+        name: decl.name,
+        period: decl.period,
+        group: decl.group,
+        category: "Copilot Studio",
+        audience: decl.audience,
+        purpose: decl.purpose,
+        license: "Custom declarative agent (web-grounded), built with Copilot Studio.",
+        features: decl.features,
+        useCases: decl.useCases,
+        systems: "Web-grounded sources and user-provided context via Copilot Studio.",
+        guardrails: decl.guardrails,
+        video: notebookUrl(decl.page),
+        declarative: true
+      });
+    });
+
+    [
+
+      { n: 18, symbol: "Pc", name: "Prompt Coach", period: 2, group: 15, category: "Copilot Chat", audience: "Teachers", purpose: "Helps teachers write better prompts for planning, activities, differentiation, and parent communication.", license: "Copilot Chat education scenario.", features: ["Prompt templates", "Lesson planning prompts", "Differentiation prompts", "Communication prompts"], useCases: ["Create a better lesson prompt", "Adapt by grade level", "Draft parent communication"], systems: "Copilot Chat, teacher-provided context, public/approved sources.", guardrails: "Teacher reviews all outputs before classroom use.", video: "https://www.youtube.com/watch?v=ilNf1-wwITU" },
+
+
+
+      { n: 26, symbol: "Re", name: "Researcher", period: 3, group: 1, category: "M365 Agent", audience: "Teachers, students, and staff", purpose: "Researches topics and produces sourced summaries for learning, planning, and briefings.", license: "Microsoft 365 agent experience where enabled.", features: ["Topic research", "Source summary", "Outline creation", "Evidence gathering"], useCases: ["Research lesson topic", "Prepare policy brief", "Compare sources"], systems: "Microsoft 365, web, SharePoint content where available.", guardrails: "Require source review and citation discipline.", video: "https://www.youtube.com/watch?v=lfruwkpqvk4" },
+      { n: 27, symbol: "An", name: "Analyst", period: 3, group: 2, category: "M365 Agent", audience: "Leaders and analysts", purpose: "Analyzes uploaded or accessible data and produces trends, explanations, and summaries.", license: "Microsoft 365 agent experience where enabled.", features: ["Data explanation", "Trend analysis", "Summary tables", "Insight narrative"], useCases: ["Attendance analysis", "Survey analysis", "Budget explanation"], systems: "Excel files, CSVs, Power BI exports, SharePoint files.", guardrails: "Validate assumptions and protect PII.", video: "https://www.youtube.com/watch?v=9O3CoP8rEkY" },
+      { n: 28, symbol: "Ka", name: "Knowledge Agent", period: 3, group: 17, category: "M365 Agent", audience: "Staff and leaders", purpose: "Central knowledge assistant that finds and synthesizes answers from approved organizational content.", license: "Microsoft 365 agent experience where enabled.", features: ["Answer synthesis", "Source citations", "Grounded search", "Content coverage insights"], useCases: ["Policy Q&A", "Onboarding help", "Program knowledge base"], systems: "Microsoft Graph, SharePoint, curated collections.", guardrails: "Permission trimming and source review.", video: "https://www.youtube.com/watch?v=7-b4OpkWT5w" },
+      { n: 29, symbol: "Vc", name: "Visual Creator", period: 4, group: 4, category: "M365 Agent", audience: "Teachers, students, and communicators", purpose: "Creates visual concepts, diagrams, and presentation-ready imagery prompts.", license: "Microsoft 365 agent experience where enabled.", features: ["Visual ideation", "Diagram prompts", "Graphic concepts", "Slide visual support"], useCases: ["Classroom poster", "Process diagram", "Campaign visual", "Lesson illustration"], systems: "Microsoft 365 creative experiences and user-provided prompts.", guardrails: "Review image rights, inclusivity, and brand fit.", video: "https://www.youtube.com/watch?v=RDSis9ah4uM" },
+      { n: 30, symbol: "Wf", name: "Workflows Agent", period: 4, group: 12, category: "M365 Agent", audience: "Staff and operations", purpose: "Helps design and trigger repeatable workflows for approvals, reminders, and handoffs.", license: "Microsoft 365 agent experience where enabled.", features: ["Workflow design", "Approval routing", "Reminder setup", "Process handoff"], useCases: ["Trip approval", "Policy acknowledgment", "Workshop registration"], systems: "Microsoft 365 workflows, Teams, Outlook, SharePoint lists.", guardrails: "Human approval for external or sensitive actions.", video: "https://www.youtube.com/watch?v=lajUQhuCx6w" },
+      { n: 34, symbol: "Wd", name: "Word Agent", period: 4, group: 1, category: "M365 Agent", audience: "Teachers and staff", purpose: "Helps draft, summarize, and improve Word documents.", license: "Microsoft 365 agent experience where enabled.", features: ["Document drafting", "Rewrite", "Summaries", "Structure suggestions"], useCases: ["Lesson plan", "Policy memo", "Parent letter", "Rubric"], systems: "Word documents and user-provided content.", guardrails: "Review before distribution.", video: "https://www.youtube.com/watch?v=8oJwUiLn6IM" },
+      { n: 35, symbol: "Xl", name: "Excel Agent", period: 4, group: 2, category: "M365 Agent", audience: "Leaders and operations", purpose: "Helps understand spreadsheets, formulas, charts, and education data patterns.", license: "Microsoft 365 agent experience where enabled.", features: ["Formula support", "Chart suggestions", "Data summaries", "Trend explanations"], useCases: ["Analyze attendance", "Summarize survey", "Track budget"], systems: "Excel files and structured data.", guardrails: "Check formulas and source data.", video: "https://www.youtube.com/watch?v=nSqCy-7Qabk" },
+      { n: 36, symbol: "Pt", name: "PowerPoint Agent", period: 4, group: 3, category: "M365 Agent", audience: "Teachers and leaders", purpose: "Helps build, rewrite, and structure presentations.", license: "Microsoft 365 agent experience where enabled.", features: ["Deck outline", "Slide rewrite", "Speaker notes", "Storyline support"], useCases: ["Training deck", "Leadership briefing", "Class presentation"], systems: "PowerPoint and source documents.", guardrails: "Review facts, visuals, and sensitivity.", video: "https://www.youtube.com/watch?v=5LZ_mTHUHvQ" },
+      { n: 37, symbol: "Pl", name: "Planner Agent", period: 4, group: 10, category: "M365 Agent", audience: "Project owners and teams", purpose: "Helps create plans, tasks, owners, timelines, and status summaries.", license: "Microsoft 365 agent experience where enabled.", features: ["Task planning", "Owner assignment", "Timeline summary", "Status tracking"], useCases: ["School project plan", "Workshop plan", "Inspection readiness tasks"], systems: "Planner, Teams, Microsoft 365 tasks.", guardrails: "Confirm owners and deadlines before publishing.", video: "https://www.youtube.com/watch?v=Wz7ML4Zh--Q" },
+      { n: 38, symbol: "Fa", name: "Facilitator Agent", period: 4, group: 6, category: "M365 Agent", audience: "Meeting facilitators", purpose: "Supports meeting facilitation, agendas, decisions, and follow-up actions.", license: "Microsoft 365 agent experience where enabled.", features: ["Agenda support", "Discussion tracking", "Decision capture", "Follow-up prompts"], useCases: ["Leadership meeting", "Teacher PLC", "Project governance meeting"], systems: "Teams meetings, chats, notes, tasks.", guardrails: "Meeting owner validates decisions and action items.", video: "https://www.youtube.com/watch?v=PMoGOWOBicY" },
+      { n: 39, symbol: "In", name: "Interpreter Agent", period: 4, group: 7, category: "M365 Agent", audience: "Multilingual school communities", purpose: "Supports language interpretation and multilingual communication scenarios.", license: "Microsoft 365 agent experience where enabled.", features: ["Interpretation support", "Multilingual summaries", "Bilingual communication", "Terminology consistency"], useCases: ["Parent meeting", "Arabic/English update", "Staff briefing"], systems: "Teams, Outlook, user-provided text.", guardrails: "Human review for official translations.", video: "https://www.youtube.com/watch?v=AzUWq5-n7yk" },
+      { n: 40, symbol: "Eb", name: "Executive Briefing Agent", period: 5, group: 4, category: "Copilot Studio", audience: "Executives and school leaders", purpose: "Builds executive-ready briefs from meetings, documents, and project context.", license: "Custom Copilot Studio agent grounded on approved leadership content.", features: ["Executive summary", "Decision brief", "Risk summary", "Next steps"], useCases: ["Minister briefing", "Principal update", "Board prep"], systems: "Microsoft 365 files, email, meetings, Teams.", guardrails: "Review for accuracy, sensitivity, and classification.", video: video("Copilot Studio Executive Briefing agent") },
+      { n: 41, symbol: "Db", name: "Daily Briefing Agent", period: 5, group: 5, category: "Copilot Studio", audience: "Staff and leaders", purpose: "Creates daily summaries of meetings, priorities, emails, and action items.", license: "Custom Copilot Studio agent for personal-context daily briefings.", features: ["Daily summary", "Priority list", "Meeting prep", "Action reminders"], useCases: ["Morning school leader brief", "Teacher day plan", "Project owner daily view"], systems: "Outlook, calendar, Teams, tasks.", guardrails: "User-specific visibility and privacy controls.", video: video("Copilot Studio Daily Briefing agent") },
+      { n: 42, symbol: "Ps", name: "Project Status Agent", period: 99, group: 6, category: "M365 Agent", audience: "Project owners and leadership", purpose: "Summarizes project status, blockers, risks, and upcoming milestones.", license: "Microsoft 365 agent experience where enabled.", features: ["Status summary", "Blocker detection", "Milestone tracking", "Risk narrative"], useCases: ["AI rollout status", "Inspection readiness project", "Partner implementation"], systems: "Planner, Teams, SharePoint, project files.", guardrails: "Project owner confirms status before sharing.", video: video("Microsoft 365 Project Status agent") },
+      { n: 43, symbol: "Sp", name: "SharePoint Agent", period: 3, group: 18, category: "M365 Agent", audience: "Knowledge owners and staff", purpose: "Answers questions from SharePoint sites, pages, policies, and documents.", license: "Microsoft 365 agent experience where enabled.", features: ["Site Q&A", "Document grounding", "Policy lookup", "Source citations"], useCases: ["MOEHE policy Q&A", "School handbook agent", "Procedure lookup"], systems: "SharePoint sites, pages, document libraries.", guardrails: "Permission trimming and source citation review.", video: "https://www.youtube.com/watch?v=G4T7_9t0u0I" },
+      { n: 44, symbol: "Sv", name: "Survey Agent", period: 4, group: 5, category: "M365 Agent", audience: "Teachers, admin staff, and program owners", purpose: "Builds and manages Microsoft Forms surveys, quizzes, and structured intake and summarizes responses.", license: "Microsoft 365 agent experience where enabled.", features: ["Survey and quiz generation", "Question suggestions", "Response summaries", "Trend and sentiment highlights"], useCases: ["Parent feedback survey", "Formative quiz", "Event registration form", "Staff wellbeing pulse"], systems: "Microsoft Forms, Excel, Teams, SharePoint.", guardrails: "Respect anonymity settings, review question bias, and confirm data handling.", video: "https://www.youtube.com/watch?v=7O92o8li_dc" },
+      { n: 45, symbol: "Lo", name: "Loop Agent", period: 99, group: 9, category: "M365 Agent", audience: "Cross-functional teams, project owners, and school leadership", purpose: "Creates and updates Microsoft Loop components and workspaces for co-authored notes, tasks, and status updates.", license: "Microsoft 365 agent experience where enabled.", features: ["Loop page and workspace creation", "Live task and status components", "Meeting recap into Loop", "Cross-app content sync"], useCases: ["Weekly leadership Loop", "Project workspace", "Meeting action tracker", "Shared brainstorming"], systems: "Microsoft Loop, Teams, Outlook, Word, Whiteboard.", guardrails: "Sensitivity labeling, sharing scope review, and change tracking.", video: video("Microsoft 365 Loop agent") },
+      { n: 46, symbol: "Pn", name: "Planner Task Agent", period: 99, group: 10, category: "M365 Agent", audience: "Program managers and teachers", purpose: "Extends Planner Agent for structured task boards, dependencies, and progress dashboards across school initiatives.", license: "Microsoft 365 agent experience where enabled.", features: ["Board layout suggestions", "Dependency mapping", "Progress dashboards", "Deadline nudges"], useCases: ["AI rollout board", "Inspection readiness board", "Teacher PD tracker"], systems: "Planner, Teams, Loop, Outlook.", guardrails: "Owner confirmation before external sharing.", video: video("Microsoft 365 Planner task agent") },
+      { n: 47, symbol: "La", name: "AI Learning Advisor", period: 99, group: 11, category: "M365 Agent", audience: "Teachers, staff, and learners", purpose: "Teaches and troubleshoots Copilot Agent Builder, Copilot Studio, and Microsoft 365 Copilot adoption questions.", license: "Microsoft 365 agent experience where enabled.", features: ["Copilot how-to guidance", "Agent Builder support", "Troubleshooting", "Adoption tips"], useCases: ["New Copilot user onboarding", "Agent Builder question", "Copilot Studio walkthrough"], systems: "Microsoft 365 Copilot help content and tenant configuration.", guardrails: "Cite official docs and defer to admin policy.", video: video("Microsoft 365 Copilot AI Learning Advisor agent") },
+      { n: 48, symbol: "Er", name: "Enrollment & Retention Insights Agent", period: 5, group: 12, category: "Copilot Studio", audience: "Admissions, student success, and school leadership", purpose: "Surfaces enrollment and retention insights across student pipeline, engagement, and risk signals to help schools act early.", license: "Custom Copilot Studio agent grounded on approved enrollment and student engagement data.", features: ["Enrollment funnel insights", "Retention risk signals", "Cohort comparisons", "Intervention recommendations"], useCases: ["Admissions funnel review", "At-risk student outreach", "Cohort retention analysis", "Leadership retention brief"], systems: "SIS, admissions CRM, LMS engagement, attendance, and approved data sources.", guardrails: "Human review of intervention decisions; respect student data privacy and fairness.", video: "https://microsofteur-my.sharepoint.com/personal/obarcelo_microsoft_com/_layouts/15/Doc.aspx?sourcedoc=%7Bde16b9ff-3676-4fd0-aa23-b619a1675582%7D&action=view&wd=target%28Copilot%20Studio%20Agents.one%7C4fedfe95-e91c-4495-bd49-4ef95dad0069%2FEnrollment%20%20Retention%20Insights%20Agent%7C4c86af8f-ff21-4247-9003-a9afcd15f4ee%2F%29&wdorigin=NavigationUrl", declarative: true },
+      { n: 49, symbol: "Pd", name: "Plan My Day", period: 99, group: 16, category: "M365 Agent", audience: "Teachers, staff, and leaders", purpose: "Compiles a comprehensive morning briefing covering priorities, meetings, and follow-ups.", license: "Microsoft 365 agent experience where enabled.", features: ["Morning briefing", "Priority list", "Meeting prep", "Focus time suggestions"], useCases: ["Principal daily plan", "Teacher day-ahead brief", "Staff meeting prep"], systems: "Outlook, calendar, Teams, tasks, Planner.", guardrails: "Personal-view only; respect calendar privacy.", video: video("Microsoft 365 Copilot Plan My Day agent") },
+      { n: 50, symbol: "Ab", name: "App Builder", period: 4, group: 13, category: "M365 Agent", audience: "Staff and program owners", purpose: "Transforms an idea into a working app, no coding required.", license: "Microsoft 365 agent experience where enabled.", features: ["Natural-language app creation", "Data model prompts", "UI layout", "Deploy to Teams/SharePoint"], useCases: ["School inventory app", "Signup app", "Approval mini-app"], systems: "Power Apps, Dataverse for Teams, SharePoint lists.", guardrails: "IT review before production, data governance checks.", video: "https://www.youtube.com/watch?v=qamwdi25c4c" },
+      { n: 51, symbol: "Wi", name: "Workforce Insights", period: 99, group: 18, category: "M365 Agent", audience: "Leaders and HR", purpose: "Real-time insights into your organization's people, structure, and activity patterns.", license: "Microsoft 365 agent experience where enabled.", features: ["Org-structure insights", "Team activity trends", "Collaboration signals", "Workload patterns"], useCases: ["Leadership review", "Reorg planning", "Workload check"], systems: "Microsoft Graph organizational data.", guardrails: "Aggregated view; respect privacy and consent.", video: video("Microsoft 365 Copilot Workforce Insights Frontier agent") },
+      { n: 52, symbol: "Ic", name: "Idea Coach", period: 2, group: 16, category: "Copilot Chat", audience: "Teachers, staff, and leaders", purpose: "Plans and navigates the brainstorming process to expand and refine ideas.", license: "Available in free Copilot Chat / Microsoft 365 education experience.", features: ["Brainstorm prompts", "Idea structuring", "Divergent and convergent thinking", "Next-step suggestions"], useCases: ["Lesson idea", "Program design", "Innovation workshop"], systems: "Copilot Chat and user-provided context.", guardrails: "Human owner selects and validates ideas.", video: "https://www.youtube.com/watch?v=WfGTI16QhxM" },
+      { n: 53, symbol: "Wc", name: "Writing Coach", period: 2, group: 17, category: "Copilot Chat", audience: "Teachers, students, and staff", purpose: "Takes your writing to the next level with feedback, structure, and clarity suggestions.", license: "Available in free Copilot Chat / Microsoft 365 education experience.", features: ["Grammar and clarity feedback", "Tone coaching", "Structure suggestions", "Style variants"], useCases: ["Essay support", "Executive brief", "Parent letter"], systems: "Word and user-provided documents.", guardrails: "Author retains final voice; no auto-submit.", video: "https://www.youtube.com/watch?v=cWdEmpc763s" },
+      { n: 54, symbol: "Cc", name: "Career Coach", period: 2, group: 18, category: "Copilot Chat", audience: "Staff, teachers, and students", purpose: "Elevates careers with role guidance, skilling paths, and interview preparation.", license: "Available in free Copilot Chat / Microsoft 365 education experience.", features: ["Career pathway", "Skill gap analysis", "Resume feedback", "Interview prep"], useCases: ["Teacher pathway", "Staff development", "Student career prep"], systems: "Copilot Chat, Viva Learning, LinkedIn Learning where enabled.", guardrails: "Guidance only; no employment decisions.", video: "https://www.youtube.com/watch?v=95VOrTRTjbk" },
+      { n: 55, symbol: "Fl", name: "Frontline Agent", period: 99, group: 14, category: "M365 Agent", audience: "Frontline staff (school administrators, facilities, security)", purpose: "Assistant that helps frontline workers find the information they need to do their job.", license: "Microsoft 365 agent experience where enabled.", features: ["Job aids Q&A", "Shift-context help", "Policy lookup", "Task guidance"], useCases: ["Facilities Q&A", "Bus supervisor guidance", "Security procedure lookup"], systems: "Frontline app data, Teams, SharePoint.", guardrails: "Respect frontline data segregation and sensitivity.", video: video("Microsoft 365 Copilot Frontline agent") },
+      { n: 56, symbol: "Sl", name: "SharePoint List Agent", period: 4, group: 9, category: "M365 Agent", audience: "Staff, project owners, and admin teams", purpose: "Transforms Microsoft 365 Copilot chat context into SharePoint lists.", license: "Microsoft 365 agent experience where enabled.", features: ["Chat-to-list conversion", "List schema suggestions", "Bulk item creation", "Status tracking"], useCases: ["Track action items", "Convert meeting notes to task list", "Build inventory list"], systems: "SharePoint lists, Teams, Loop, Copilot Chat.", guardrails: "Site permission and sensitivity label review.", video: "https://www.youtube.com/watch?v=rvEU7ZACksg" }
+    ].forEach(addAgent);
+
+    function tileClass(category) {
+      return category === "Copilot Chat" ? "freechat" : category === "M365 Agent" ? "freem365" : "studio";
+    }
+    function addLabel(text, cls, row, col) {
+      const div = document.createElement("div");
+      div.className = cls;
+      div.textContent = text;
+      div.style.gridRow = row;
+      div.style.gridColumn = col;
+      ptable.appendChild(div);
+    }
+    function addElement(agent) {
+      if (agent.period > 7 || agent.period < 1) return; // hidden agents
+      const button = document.createElement("button");
+      button.className = `element ${tileClass(agent.category)}`;
+      button.type = "button";
+      button.style.gridRow = agent.period + 1;
+      button.style.gridColumn = agent.group + 1;
+      button.dataset.category = agent.category;
+      button.dataset.search = JSON.stringify(agent).toLowerCase();
+      button.innerHTML = `
+        <div class="atomic"><span>${agent.n}</span><span>${agent.group}</span></div>
+        <div class="symbol-row"><span class="tile-icon" aria-hidden="true">${iconFor(agent.name, agent.category)}</span><span class="symbol">${agent.symbol}</span></div>
+        <div class="name">${agent.name}</div>
+        <div class="mass">${agent.category}</div>
+      `;
+      button.addEventListener("click", () => openAgent(agent));
+      ptable.appendChild(button);
+    }
+    function build() {
+      ptable.innerHTML = "";
+      for (let i = 1; i <= 18; i += 1) addLabel(String(i), "group-label", 1, i + 1);
+      for (let i = 1; i <= 7; i += 1) addLabel(String(i), "period-label", i + 1, 1);
+      agents.forEach(addElement);
+      const grid = document.getElementById("moeheGrid");
+      grid.innerHTML = "";
+
+      // Build a lookup: normalized name -> agent object
+      const normalize = (s) => (s || "").toLowerCase().replace(/\([^)]*\)/g, "").replace(/[^a-z0-9]/g, "");
+      const agentByName = new Map();
+      agents.forEach((a) => {
+        if (a.period > 7 || a.period < 1) return;
+        agentByName.set(normalize(a.name), a);
+      });
+      const resolveAgent = (label) => {
+        const key = normalize(label);
+        if (agentByName.has(key)) return agentByName.get(key);
+        // Try partial match on prefix (first 12 chars) for labels like "Email drafting" -> "Outlook..."
+        for (const [k, v] of agentByName) {
+          if (k.startsWith(key) || key.startsWith(k)) return v;
+        }
+        return null;
+      };
+
+      personaCards.forEach((p) => {
+        const card = document.createElement("article");
+        card.className = "moehe-card persona-card";
+        card.innerHTML = `
+          <div class="moehe-title">
+            <span class="card-icon" aria-hidden="true">${productIcon(p.iconKey)}</span>
+            <h3>${p.persona}</h3>
+          </div>
+          <p class="persona-summary">${p.summary}</p>
+          <ul class="persona-agents"></ul>
+        `;
+        const list = card.querySelector(".persona-agents");
+        p.agents.forEach((a) => {
+          const item = document.createElement("li");
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "persona-agent";
+          btn.innerHTML = `<strong>${a.name}</strong><span>${a.why}</span>`;
+          const target = resolveAgent(a.name);
+          if (target) {
+            btn.addEventListener("click", () => focusAgent(target));
+          } else {
+            btn.disabled = true;
+            btn.title = "Not on the periodic table";
+          }
+          item.appendChild(btn);
+          list.appendChild(item);
+        });
+        grid.appendChild(card);
+      });
+    }
+
+    function focusAgent(agent) {
+      // Find the matching tile in the periodic table
+      const tiles = document.querySelectorAll(".element");
+      let tile = null;
+      tiles.forEach((el) => {
+        try {
+          const data = JSON.parse(el.dataset.search || "{}");
+          if ((data.n === agent.n) || (data.name && agent.name && data.name.toLowerCase() === agent.name.toLowerCase())) {
+            tile = el;
+          }
+        } catch (_) { /* dataset.search is lowercased JSON string */ }
+      });
+      // Fallback: match by tile text
+      if (!tile) {
+        tiles.forEach((el) => {
+          const nameEl = el.querySelector(".name");
+          if (nameEl && nameEl.textContent.trim() === agent.name) tile = el;
+        });
+      }
+      if (tile) {
+        tile.classList.remove("highlight");
+        void tile.offsetWidth; // restart animation
+        tile.classList.add("highlight");
+        tile.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+        setTimeout(() => tile.classList.remove("highlight"), 1800);
+      }
+      openAgent(agent);
+    }
+    function openAgent(agent) {
+      const modalTile = document.getElementById("modalTile");
+      modalTile.className = `big ${tileClass(agent.category)}`;
+      modalTile.innerHTML = `<div class="atomic"><span>${agent.n}</span><span>${agent.group}</span></div><div class="modal-icon" aria-hidden="true">${iconFor(agent.name, agent.category)}</div><div class="symbol">${agent.symbol}</div><div class="name">${agent.name}</div><div class="mass">${agent.category}</div>`;
+      document.getElementById("modalName").textContent = agent.name;
+      document.getElementById("modalSub").textContent = `Period ${agent.period} \u00b7 Group ${agent.group} \u00b7 ${agent.category} \u00b7 ${agent.audience}`;
+      document.getElementById("modalPurpose").textContent = agent.purpose;
+      document.getElementById("modalLicense").textContent = agent.license;
+      document.getElementById("modalSystems").textContent = agent.systems;
+      document.getElementById("modalGuardrails").textContent = agent.guardrails;
+      document.getElementById("modalVideo").href = agent.video;
+      fillList("modalFeatures", agent.features);
+      fillList("modalUseCases", agent.useCases);
+      dialog.showModal();
+    }
+    function fillList(id, items) {
+      const list = document.getElementById(id);
+      list.innerHTML = "";
+      items.forEach((item) => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        list.appendChild(li);
+      });
+    }
+    function applyFilters() {
+      const term = search.value.trim().toLowerCase();
+      let visible = 0;
+      document.querySelectorAll(".element").forEach((el) => {
+        const show = (activeFilter === "all" || el.dataset.category === activeFilter) && (!term || el.dataset.search.includes(term));
+        el.classList.toggle("hidden", !show);
+        if (show) visible += 1;
+      });
+      empty.style.display = visible ? "none" : "block";
+    }
+    document.querySelectorAll(".pill").forEach((button) => {
+      button.addEventListener("click", () => {
+        activeFilter = button.dataset.filter;
+        document.querySelectorAll(".pill").forEach((pill) => pill.setAttribute("aria-pressed", String(pill === button)));
+        applyFilters();
+      });
+    });
+    search.addEventListener("input", applyFilters);
+    close.addEventListener("click", () => dialog.close());
+    dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); });
+    build();
+  </script>
+</body>
+</html>
+
