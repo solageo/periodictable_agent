@@ -682,9 +682,39 @@
   <script>
     const video = (query) => `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
     const notebookUrl = (pageName) => {
-      const base = "https://microsofteur-my.sharepoint.com/personal/obarcelo_microsoft_com/_layouts/15/Doc.aspx?sourcedoc=%7Bde16b9ff-3676-4fd0-aa23-b619a1675582%7D&action=view&wd=target%28%E2%9E%A1%EF%B8%8F%2026%20Declarative%20Agents%20%28Web-Grounded%5C%29.one%7C949d4536-6a07-4037-963d-67116bc6cfc9%2F";
-      const suffix = "%2F%29&wdorigin=NavigationUrl";
-      return base + encodeURIComponent(pageName) + suffix;
+      const base = "https://github.com/solageo/agentperiodictable/blob/main/agents/";
+      const map = {
+        "Study guide": "01-study-guide.md",
+        "Mind Mapper": "02-mind-mapper.md",
+        "Socratic Thinking agent": "03-socratic-thinking-agent.md",
+        "Meeting mentor": "04-meeting-mentor.md",
+        "Meeting Summary and Follow-up": "05-meeting-summary-and-agenda-planner.md",
+        "Meeting Summary and Agenda Planner": "05-meeting-summary-and-agenda-planner.md",
+        "Teaching Advisor (any topic)": "06-teaching-advisor-any-topic.md",
+        "Academic researcher": "07-academic-researcher.md",
+        "Tiered Task Designer": "08-tiered-task-designer.md",
+        "Bloom's taxonomy": "09-bloom-s-taxonomy.md",
+        "Create AI-proof assignments": "10-create-ai-proof-assignments.md",
+        "Rubrics creator": "11-rubrics-creator.md",
+        "Code creator": "12-code-creator.md",
+        "Active Learning": "13-active-learning.md",
+        "Social Storyteller": "14-social-storyteller.md",
+        "AI advisor for Principals": "15-ai-advisor-for-principals.md",
+        "AI Ethics Advisor": "16-ai-ethics-advisor.md",
+        "Interactive Lecture": "17-interactive-lecture.md",
+        "Study Buddy": "18-study-buddy.md",
+        "Study planner (any web)": "19-study-planner-any-web.md",
+        "Assessing Papers": "20-assessing-papers.md",
+        "Handwritten Exam Grader": "21-handwritten-exam-grader.md",
+        "BOT-A-SAURUS - AGENT": "22-bot-a-saurus-agent-creator.md",
+        "BOT-A-SAURUS - AGENT CREATOR": "22-bot-a-saurus-agent-creator.md",
+        "ROLE PLAY Practice negotiation": "23-role-play-practice-negotiation.md",
+        "Course Creation Assistant": "24-course-creation-assistant.md",
+        "Self-assessment creator": "25-self-assessment-creator.md",
+        "Document Checker": "26-document-checker.md"
+      };
+      const file = map[pageName];
+      return file ? base + file : "https://github.com/solageo/agentperiodictable";
     };
     const categoryClass = (category) => category === "Copilot Chat" ? "freechat" : category === "M365 Agent" ? "freem365" : "studio";
     const productIcon = (app) => {
